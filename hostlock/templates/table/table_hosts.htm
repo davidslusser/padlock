@@ -1,0 +1,22 @@
+<table class="table table-condensed table-bordered table-striped" data-toggle="table" data-search="true"
+       data-flat="true" data-pagination="true" data-show-pagination-switch="true" data-show-columns="true"
+       data-show-export="true" data-reorderable-columns="true" data-resizable="false" data-export-types="['excel','csv','txt','sql']">
+    <thead>
+    <tr>
+        <th data-field="hostname" data-sortable="true">Hostname</th>
+        <th data-field="owner" data-sortable="true">Owner</th>
+        <th data-field="is_locked" data-sortable="true">Is Locked?</th>
+        <th data-field="historical" data-sortable="true">Prior Locks</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in queryset %}
+        <tr>
+            <td>{{ row.hostname }}</td>
+            <td>{{ row.owner }}</td>
+            <td>{{ row.is_locked }}</td>
+            <td>{{ row.lock_set.count }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

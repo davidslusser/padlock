@@ -14,19 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path, include
+from django.contrib.auth.views import login, logout_then_login
 from _common import views as common
 from hostlock import views as hostlock
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', login, {'template_name': 'registration/login.html'}, name="login"),
+    path('logout/', logout_then_login, name="logout"),
+    path('detail_user/', common.ShowUserProfile.as_view(), name='detail_user'),
 
     # app urls
     path('hostlock/', include('hostlock.urls'), ),
-    # path(r'default', hostlock.ShowHostlockHome.as_view(), name='default'),
-    # path(r'home', hostlock.ShowHostlockHome.as_view(), name='home'),
-    # path(r'index', hostlock.ShowHostlockHome.as_view(), name='index'),
+    path('', hostlock.HostLockIndex.as_view(), name='index'),
+    path(r'default', hostlock.HostLockIndex.as_view(), name='default'),
+    path(r'home', hostlock.HostLockIndex.as_view(), name='home'),
+    path(r'index', hostlock.HostLockIndex.as_view(), name='index'),
 
     # swagger API docs
     path('swagger', common.schema_view, name="swagger"),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [path('__debug__/', include(debug_toolbar.urls)), ] + urlpatterns

@@ -1,8 +1,7 @@
 from rest_framework import serializers
+
 # import models
-from hostlock.models import (Host,
-                             Lock
-                             )
+from hostlock.models import (Host, Lock)
 
 
 class HostSerializer(serializers.ModelSerializer):

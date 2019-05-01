@@ -1,0 +1,91 @@
+{% extends base_template|default:"base.htm" %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="container-fluid margin-bottom-40">
+        <h1><span class="text-info"><b>User Profile: </b></span><small>{{ user.username }}</small></h1><br/>
+    </div></br>
+
+    <div class="container margin-bottom-40">
+        <div class="row">
+            <div class="col-sm-2"><i class="far fa-address-card fa-5x text-info"></i></div>
+            <div class="col-sm-10">
+                <table class='table borderless'>
+                    <col width="25%">
+                    <col width="75%">
+                    <tr>
+                        <td><span class="text-info">Is Active:</span></td>
+                        <td class="col-sm-8">
+                            {% if user.is_active %}
+                                <span class="badge badge-pill badge-info"><i class="fa fa-check fa-fw"></i></span>
+                            {% else %}
+                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-info">Is Staff:</span></td>
+                        <td class="col-sm-8">
+                            {% if user.is_staff %}
+                                <span class="badge badge-pill badge-info"><i class="fa fa-check fa-fw"></i></span>
+                            {% else %}
+                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-info">Is Superuser:</span></td>
+                        <td class="col-sm-8">
+                            {% if user.is_superuser %}
+                                <span class="badge badge-pill badge-info"><i class="fa fa-check fa-fw"></i></span>
+                            {% else %}
+                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-info">Date Joined:</span></td>
+                        <td class="col-sm-8">
+                            {{ user.date_joined }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-info">API Token:</span></td>
+                        <td class="col-sm-8">
+                            {{ token }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-sm-2"><i class="fas fa-users fa-5x text-info"></i></div>
+            <div class="col-sm-10">
+                <table class='table borderless'>
+                    <col width="25%">
+                    <col width="75%">
+                    <tr>
+                        <td><span class="text-info">Group Memberships:</span></td>
+                        <td class="col-sm-8">
+                            {% if groups %}
+                                <div class="columns">
+                                    <ul>
+                                        {% for group in groups %}
+                                            <li>{{ group }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% else %}
+                                no group memberships found
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

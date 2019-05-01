@@ -1,0 +1,16 @@
+{% extends "base.htm" %}
+{% load staticfiles %}
+
+{% block local_head %}
+    {% include "component/table_components.htm" %}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1><b>{{ title }}:</b> {% if sub_title %}<small><small>{{ sub_title }}</small></small>{% endif %}</h1>
+
+        {% include table %}
+    </div>
+{#    {% include 'component/modals.htm' %}#}
+
+{% endblock %}

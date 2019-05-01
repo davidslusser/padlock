@@ -7,7 +7,7 @@ from hostlock.models import (Host, Lock)
 class HostAdmin(admin.ModelAdmin):
     list_display = ("id", "hostname", "owner", "is_locked", "updated_at")
     search_fields = ["hostname", "owner__username"]
-    list_filter = ["is_locked"]
+    list_filter = ["is_locked", "owner"]
 
 
 class LockAdmin(admin.ModelAdmin):

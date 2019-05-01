@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import environ
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = str(environ.Path(__file__) - 2)
+print("TEST: ", BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -47,10 +50,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_filters',
     'djangohelpers',
+    'debug_toolbar',
 
     # padlock apps
     'hostlock',
 ]
+
+INTERNAL_IPS = ['127.0.0.1', ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'padlock.urls'
@@ -67,7 +74,7 @@ ROOT_URLCONF = 'padlock.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['{}/_common/templates'.format(BASE_DIR)],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,6 +86,14 @@ TEMPLATES = [
         },
     },
 ]
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+DEBUG_TOOLBAR_CONFIG = {
+    'DISABLE_PANELS': [
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    ],
+    'SHOW_TEMPLATE_CONTEXT': True,
+}
 
 WSGI_APPLICATION = 'padlock.wsgi.application'
 
@@ -152,4 +167,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(str(BASE_DIR), 'staticroot')
 STATIC_URL = '/static/'
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
+STATICFILES_DIRS = (
+    os.path.join(str(BASE_DIR), '_common/static'),
+)
+
+# See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+SESSION_COOKIE_AGE = 28800

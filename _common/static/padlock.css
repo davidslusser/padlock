@@ -1,0 +1,18 @@
+.margin-right-20 {
+    margin-right: 20px !important;
+}
+
+.text-greyout {
+    color: lightgrey;
+    font-style: italic;
+}
+
+.card-deck a, a:hover{
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-link {
+    margin-left: 10px;
+    margin-right: 10px;
+}

@@ -1,0 +1,28 @@
+<table class="table table-condensed table-bordered table-striped" data-toggle="table" data-search="true"
+       data-flat="true" data-pagination="true" data-show-pagination-switch="true" data-show-columns="true"
+       data-show-export="true" data-reorderable-columns="true" data-resizable="false" data-export-types="['excel','csv','txt','sql']">
+    <thead>
+    <tr>
+        <th data-field="host" data-sortable="true">Host</th>
+        <th data-field="status" data-sortable="true">Status</th>
+        <th data-field="requester" data-sortable="true">Requester</th>
+        <th data-field="owner" data-sortable="true">Owner</th>
+        <th data-field="purpose" data-sortable="true">Purpose</th>
+        <th data-field="notes" data-sortable="true">Notes</th>
+        <th data-field="expiration" data-sortable="true">Expiration Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in queryset %}
+        <tr>
+            <td>{{ row.host }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ row.requester }}</td>
+            <td>{{ row.host.owner }}</td>
+            <td>{{ row.purpose }}</td>
+            <td>{{ row.notes }}</td>
+            <td>{{ row.expiration }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
