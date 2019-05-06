@@ -7,10 +7,10 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h1><b>{{ title }}:</b> {% if sub_title %}<small><small>{{ sub_title }}</small></small>{% endif %}</h1>
+        <h1><span class="text-primary"><b>{{ title }}:</b></span> {% if sub_title %}<span class="text-secondary"><small><small>{{ sub_title }}</small></small></span>{% endif %}</h1>
 
         {% include table %}
     </div>
-{#    {% include 'component/modals.htm' %}#}
+    {% include 'component/modals.htm' %}
 
 {% endblock %}

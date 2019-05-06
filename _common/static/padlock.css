@@ -16,3 +16,29 @@
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.table-action-icon{
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+th {
+    background-color: var(--primary);
+    color: white;
+}
+.table-striped tbody > tr:nth-child(even) > td,
+.table-striped tbody > tr:nth-child(even) > th {
+    background-color: var(--light);
+}
+
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+    background-color: var(--secondary);
+}
+
+
+
+/*a:hover,a:focus{*/
+    /*text-decoration: none;*/
+    /*outline: none;*/
+/*}*/

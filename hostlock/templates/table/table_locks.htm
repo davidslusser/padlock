@@ -7,9 +7,9 @@
         <th data-field="status" data-sortable="true">Status</th>
         <th data-field="requester" data-sortable="true">Requester</th>
         <th data-field="owner" data-sortable="true">Owner</th>
-        <th data-field="purpose" data-sortable="true">Purpose</th>
-        <th data-field="notes" data-sortable="true">Notes</th>
-        <th data-field="expiration" data-sortable="true">Expiration Time</th>
+        <th data-field="created_at" data-sortable="true">Created At</th>
+        <th data-field="expiration" data-sortable="true">Expires At</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -19,9 +19,26 @@
             <td>{{ row.status }}</td>
             <td>{{ row.requester }}</td>
             <td>{{ row.host.owner }}</td>
-            <td>{{ row.purpose }}</td>
-            <td>{{ row.notes }}</td>
-            <td>{{ row.expiration }}</td>
+            <td>{{ row.created_at|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ row.expires_at|date:'Y-m-d H:i:s' }}</td>
+            <!-- actions -->
+            <td>
+                <!-- manually unlock host -->
+                <a href="#" class="table-action-icon" title="unlock host"
+                      onClick="confirmAction('', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"
+                      role="button" data-toggle="tooltip" data-placement="left">
+                    <i class="fa fa-lock-open"></i>
+                </a>
+
+                <!-- extend lock -->
+
+                <!-- view lock history -->
+                <a href="#" class="table-action-icon" title="view audit log"
+                   onClick="showInfo('{% url "hostlock:get_lock_auditlog" %}', '{{ row.id }}', 'Audit Log: <small><i>{{ row.host }}</i></small>', 'xl');"
+                   role="button" data-toggle="tooltip" data-placement="left">
+                    <i class="fa fa-history fa-fw"></i>
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

@@ -18,5 +18,5 @@ class LockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lock
         fields = ["id", "created_at", "updated_at", "host", "requester", "source", "request_details", "purpose",
-                  "notes", "expiration", "status", ]
+                  "notes", "expires_at", "status", ]
         depth = 0

@@ -1,4 +1,6 @@
 import json
+from datetime import timedelta
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
@@ -48,7 +50,7 @@ class GrantLockViewSet(viewsets.ViewSet):
         - if there is an expired lock on this host, release lock and grant request
 
     To use:
-        curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token fca46ae2c3ef9295f7859e5d7820bd4aaa6bea4d' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'
+        curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'
     """
     @staticmethod
     def create(request):
@@ -68,8 +70,17 @@ class GrantLockViewSet(viewsets.ViewSet):
 
         try:
             # create a lock for host
+            if expiration in ['0']:
+                expires_at = None
+                no_expire = True
+            elif expiration:
+                expires_at = timezone.now() + timedelta(minutes=int(expiration))
+                no_expire = False
+            else:
+                expires_at = None
+                no_expire = False
             new_lock = Lock.objects.create(host=host, requester=request.user, purpose=purpose, notes=notes,
-                                           expiration=expiration, status="granted")
+                                           expires_at=expires_at, status="granted", no_expire=no_expire)
             lock_serializer = LockSerializer(new_lock)
             return Response(lock_serializer.data)
         except ValidationError:
@@ -87,7 +98,7 @@ class ReleaseLockViewSet(viewsets.ViewSet):
           else, reject the release request
 
     To use:
-        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/release_lock/host1/ -H 'Authorization: Token fca46ae2c3ef9295f7859e5d7820bd4aaa6bea4d' -H 'Content-Type: application/x-www-form-urlencoded'
+        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/release_lock/host1/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded'
     """
     @staticmethod
     def update(request, pk=None):
@@ -134,7 +145,7 @@ class CheckLockViewSet(viewsets.ViewSet):
         - check if there is an existing lock on the given host, return lock details (via serializer) if found
 
     To use:
-        curl -X GET http://127.0.0.1:8787/hostlock/api/v1/check_lock/host1/ -H 'Authorization: Token fca46ae2c3ef9295f7859e5d7820bd4aaa6bea4d' -H 'Content-Type: application/x-www-form-urlencoded'
+        curl -X GET http://127.0.0.1:8787/hostlock/api/v1/check_lock/host1/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded'
     """
     @staticmethod
     def retrieve(request, pk=None):

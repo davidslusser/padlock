@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 # import hostlock views and apis
 from hostlock import views
 from hostlock.apis import views as apis
+from hostlock import ajax
 
 app_name = "hostlock"
 
@@ -34,5 +35,10 @@ urlpatterns = [
     # list views
     path('list_locks/', views.ListLocks.as_view(), name='list_locks'),
     path('list_hosts/', views.ListHosts.as_view(), name='list_hosts'),
+    path('list_my_locks', views.ListMyLocks.as_view(), name='list_my_locks'),
+
+    # ajax views
+    path('get_lock_auditlog', ajax.get_lock_auditlog, name='get_lock_auditlog'),
+    path('get_host_auditlog', ajax.get_host_auditlog, name='get_host_auditlog'),
 
 ]

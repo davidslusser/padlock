@@ -7,6 +7,7 @@
         <th data-field="owner" data-sortable="true">Owner</th>
         <th data-field="is_locked" data-sortable="true">Is Locked?</th>
         <th data-field="historical" data-sortable="true">Prior Locks</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -14,8 +15,24 @@
         <tr>
             <td>{{ row.hostname }}</td>
             <td>{{ row.owner }}</td>
-            <td>{{ row.is_locked }}</td>
+            <td>
+                {% if row.is_locked %}
+                <span class="badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
+                {% else %}
+                <span class="badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                {% endif %}
+            </td>
             <td>{{ row.lock_set.count }}</td>
+
+            <!-- actions -->
+            <td>
+                <!-- lock history -->
+                <a href="#" class="" title="view audit log"
+                   onClick="showInfo('{% url "hostlock:get_host_auditlog" %}', '{{ row.hostname }}', 'Audit Log: <small><i>{{ row.hostname }}</i></small>', 'xl');"
+                   role="button" data-toggle="tooltip" data-placement="left">
+                    <i class="fa fa-history fa-fw"></i>
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>

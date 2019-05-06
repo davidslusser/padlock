@@ -11,7 +11,7 @@ class HostAdmin(admin.ModelAdmin):
 
 
 class LockAdmin(admin.ModelAdmin):
-    list_display = ("id", "host", "requester", "source", "status", "expiration", "updated_at")
+    list_display = ("id", "host", "requester", "source", "status", "expires_at", "updated_at")
     search_fields = ["host", "requester", "status"]
     list_filter = ["status"]
 

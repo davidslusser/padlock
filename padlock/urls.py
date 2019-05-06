@@ -28,6 +28,7 @@ urlpatterns = [
 
     # app urls
     path('hostlock/', include('hostlock.urls'), ),
+    path('common/', include('_common.urls'), ),
     path('', hostlock.HostLockIndex.as_view(), name='index'),
     path(r'default', hostlock.HostLockIndex.as_view(), name='default'),
     path(r'home', hostlock.HostLockIndex.as_view(), name='home'),
