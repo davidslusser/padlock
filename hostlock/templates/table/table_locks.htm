@@ -25,12 +25,17 @@
             <td>
                 <!-- manually unlock host -->
                 <a href="#" class="table-action-icon" title="unlock host"
-                      onClick="confirmAction('', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"
-                      role="button" data-toggle="tooltip" data-placement="left">
+                   onClick="confirmAction('{% url 'hostlock:release_host_lock' %}?id={{ row.id }}', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"
+                   role="button" data-toggle="tooltip" data-placement="left">
                     <i class="fa fa-lock-open"></i>
                 </a>
 
-                <!-- extend lock -->
+{#                <!-- extend lock -->#}
+{#                <a href="#" class="table-action-icon" title="extend lock time"#}
+{#                   onClick="confirmAction('{% url 'hostlock:release_host_lock' %}?id={{ row.id }}', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"#}
+{#                   role="button" data-toggle="tooltip" data-placement="left">#}
+{#                    <i class="fa fa-lock"></i>#}
+{#                </a>#}
 
                 <!-- view lock history -->
                 <a href="#" class="table-action-icon" title="view audit log"

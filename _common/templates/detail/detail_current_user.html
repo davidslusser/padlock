@@ -2,123 +2,131 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="container-fluid margin-bottom-40">
+    <div class="container-fluid mb-4">
         <h1><span class="text-primary"><b>User Profile: </b></span><span class="text-secondary"><small>{{ user.username }}</small></span></h1><br/>
     </div></br>
 
-    <div class="container margin-bottom-40">
+    <div class="container mb-4"> <!-- user details -->
         <div class="row">
             <div class="col-sm-2"><i class="far fa-address-card fa-5x text-primary"></i></div>
             <div class="col-sm-10">
-                <table class='table borderless'>
-                    <col width="25%">
-                    <col width="75%">
-                    <tr>
-                        <td><span class="text-primary"><b>Is Active:</b></span></td>
-                        <td class="col-sm-8">
-                            {% if user.is_active %}
-                                <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
-                            {% else %}
-                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-primary"><b>Is Staff:</b></span></td>
-                        <td class="col-sm-8">
-                            {% if user.is_staff %}
-                                <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
-                            {% else %}
-                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-primary"><b>Is Superuser:</b></span></td>
-                        <td class="col-sm-8">
-                            {% if user.is_superuser %}
-                                <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
-                            {% else %}
-                                <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-primary"><b>Date Joined:</b></span></td>
-                        <td class="col-sm-8">
-                            {{ user.date_joined }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-primary"><b>API Token:</b></span></td>
-                        <td class="col-sm-8">
-                            {{ token }} &nbsp;&nbsp;
-                            <a href="#" class="atmo-link-padding atmo-link-text" title="create Jira ticket"
-                                  onClick="confirmAction('{% url "_common:update_token" %}', 'Update Token', 'This will delete your API token and create a new one. Do you wish to continue?', 'Continue', 'POST');"
-                                  role="button" data-toggle="tooltip" data-placement="left">
-                                <i class="fas fa-sync-alt"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
+
+                <!-- is active -->
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Is Active:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        {% if user.is_active %}
+                            <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
+                        {% else %}
+                            <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- is staff -->
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Is Staff:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        {% if user.is_staff %}
+                            <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
+                        {% else %}
+                            <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- is superuser -->
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Is Superuser:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        {% if user.is_superuser %}
+                            <span class="badge badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
+                        {% else %}
+                            <span class="badge badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- date joined -->
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Date Joined:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        {{ user.date_joined }}
+                    </div>
+                </div>
+
+                <!-- api token -->
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>API Token:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                    {{ token }} &nbsp;&nbsp;
+                    <a href="#" class="atmo-link-padding atmo-link-text" title="refresh token"
+                          onClick="confirmAction('{% url "_common:update_token" %}', 'Update Token', 'This will delete your API token and create a new one. Do you wish to continue?', 'Continue', 'POST');"
+                          role="button" data-toggle="tooltip" data-placement="left">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">&nbsp;</div>
-        <div class="row">&nbsp;</div>
+    </div>
+
+    <div class="container mb-4"> <!-- group memberships -->
         <div class="row">
             <div class="col-sm-2"><i class="fas fa-users fa-5x text-primary"></i></div>
             <div class="col-sm-10">
-                <table class='table borderless'>
-                    <col width="25%">
-                    <col width="75%">
-                    <tr>
-                        <td><span class="text-primary"><b>Group Memberships:</b></span></td>
-                        <td class="col-sm-8">
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Group Memberships:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="row">
                             {% if groups %}
-                                <div class="columns">
-                                    <ul>
-                                        {% for group in groups %}
-                                            <li>{{ group }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                {% for group in groups %}
+                                <div class="col-sm-12 col-md-8 col-lg-4">{{ group }}</div>
+                                {% endfor %}
                             {% else %}
-                                no group memberships found
+                                <div>no group memberships found</div>
                             {% endif %}
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row">&nbsp;</div>
-        <div class="row">&nbsp;</div>
+    </div>
+
+    <div class="container mb-4"> <!-- service accounts -->
         <div class="row">
-            <div class="col-sm-2"><i class="fas fa-users-cog fa-5x text-primary"></i></div>
+            <div class="col-sm-2"><i class="far fa-address-users fa-5x text-primary"></i></div>
             <div class="col-sm-10">
-                <table class='table borderless'>
-                    <col width="25%">
-                    <col width="75%">
-                    <tr>
-                        <td><span class="text-primary"><b>Service Accounts:</b></span></td>
-                        <td class="col-sm-8">
+                <div class="row border-bottom border-light p-2">
+                    <div class="col-sm-4">
+                        <span class="text-primary"><b>Group Memberships:</b></span>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="row">
                             {% if groups %}
-                                <div class="columns">
-                                    <ul>
-                                        {% for group in groups %}
-                                            <li>{{ group }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                                {% for group in groups %}
+                                    <div class="col-sm-12 col-md-8 col-lg-4">{{ group }}</div>
+                                {% endfor %}
                             {% else %}
-                                no group memberships found
+                                <div>no group memberships found</div>
                             {% endif %}
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-
     </div>
 
     {% include 'component/modals.htm' %}

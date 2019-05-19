@@ -1,10 +1,19 @@
+# import system modules
 from datetime import timedelta
+import logging
+
+# import django modules
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission, User
 from django.core.exceptions import ValidationError
 from djangohelpers.managers import HandyHelperModelManager
+
+# import third party modules
 from auditlog.registry import auditlog
+
+# import PadLock modules
+from _common.exceptions import (UserNotAuthorized, HostLocked, LockExpireMissing, MaxLockExtensionReached)
 
 
 lock_status_choices = (
@@ -56,9 +65,10 @@ class Lock(PadlockBaseModel):
     notes = models.CharField(max_length=255, blank=True, null=True, help_text="additional notes regarding this lock")
     expires_at = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(minutes=15),
                                       help_text="date/time when this lock expires")
-    status = models.CharField(max_length=16, choices=lock_status_choices, default="unknown",
+    status = models.CharField(max_length=32, choices=lock_status_choices, default="unknown",
                               help_text="current status of this lock")
     no_expire = models.BooleanField(default=False, help_text="set to True if this lock does not expire")
+    extend_count = models.IntegerField(default=0, help_text="number of times this lock has been extended")
 
     class Meta:
         db_table = 'hostlock_locks'
@@ -85,17 +95,18 @@ class Lock(PadlockBaseModel):
                 Lock.objects.filter(pk=existing_lock.pk).update(status="expired")
             else:
                 raise ValidationError({'host': 'this host is currently locked'})
+                # raise ValidationError('this host is currently locked')
 
     def release_lock(self, user, manual=False):
         """ release the current lock """
-        user_can_release_lock = False
+        user_can_manage_lock = False
         if user is self.requester:
-            user_can_release_lock = True
+            user_can_manage_lock = True
         elif user.is_superuser:
-            user_can_release_lock = True
+            user_can_manage_lock = True
         elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
-            user_can_release_lock = True
-        if not user_can_release_lock:
+            user_can_manage_lock = True
+        if not user_can_manage_lock:
             return 1
         if manual:
             self.status = "manually released"
@@ -103,6 +114,65 @@ class Lock(PadlockBaseModel):
             self.status = "released"
         self.save()
         return 0
+
+    def extend_lock(self, user, minutes):
+        """
+        extend lock by <minutes> minutes
+        :param user: user object
+        :param minutes: minutes to extend lock by <int>
+        :return: <int>
+            0 if successful
+            1 if error encountered
+        """
+        # try:
+            # print('requester: "{}"'.format(self.requester))
+            # print('user: "{}"'.format(user))
+            # print(user.username is self.requester.username)
+        user_can_manage_lock = False
+        if user == self.requester:
+            # print('user is requester')
+            user_can_manage_lock = True
+        elif user.is_superuser:
+            # print('user is superuser')
+            user_can_manage_lock = True
+        elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
+            # print('user is in a matching group')
+            user_can_manage_lock = True
+
+        print("TEST: ", user_can_manage_lock)
+        if user_can_manage_lock in [False, None]:
+            # print('no soup for you!')
+            return UserNotAuthorized
+
+        # do not allow extend if no expires_at is set
+        # try:
+        if not self.expires_at or self.no_expire:
+            print("can't extent this one!")
+            return LockExpireMissing
+        # except LockCanNotBeExtended:
+        #     print("BLAH")
+
+        # do not allow extend if maximum extends have been reached
+        max_extend = 3
+        if self.extend_count >= max_extend:
+            print('max extends reached!')
+            # return "balh"
+            # return MaxLockExtensionReached
+            raise MaxLockExtensionReached({'host': 'this host can not be extended further'})
+            # raise MaxLockExtensionReached(None )
+            # raise ValidationError({'host': 'this host can not be extended further'})
+
+            # return 0
+        print('extending the lock...')
+        minutes = int(minutes)
+        new_expire = self.expires_at + timedelta(minutes=minutes)
+        extend_count = self.extend_count + 1
+        Lock.objects.filter(pk=self.pk).update(expires_at=new_expire, extend_count=extend_count)
+        return 0
+        # except Exception as err:
+        #     logging.error(err)
+        #     print("OOPS: ", err)
+        #     return 1
 
     def save(self, *args, **kwargs):
         self.full_clean()

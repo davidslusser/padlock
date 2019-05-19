@@ -1,0 +1,55 @@
+{% extends base_template|default:"base.htm" %}
+{% load staticfiles %}
+
+{% block content %}
+    <section>
+        <header>
+            <div class="headline text-center">
+                <br/>
+                <div class="container mb-5">
+                    <h1 class="text-primary"><b>PadLock Administration</b></h1>
+                    <h5>&nbsp;</h5>
+                </div>
+            </div>
+        </header>
+    </section>
+
+    <section>
+        <div class="container-fluid">
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
+
+                <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                    <a href="">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary"><i class="fas fa-lock"></i></h2>
+                            <h3 class="card-title text-primary">Create Lock</h3>
+                            <p class="card-text">Add a lock to a host</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                    <a href="">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary"><i class="fas fa-user-cog"></i></h2>
+                            <h3 class="card-title text-primary">Manage Service Account</h3>
+                            <p class="card-text">List/Create/Delete service accounts</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                    <a href="/admin">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary"><i class="fab fa-python"></i></h2>
+                            <h3 class="card-title text-primary">Django Console</h3>
+                            <p class="card-text">Access the django administrator console</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+{% endblock content %}

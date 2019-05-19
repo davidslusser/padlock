@@ -1,1 +1,13 @@
-API Guide
+{% extends "base.htm" %}
+{% load staticfiles %}
+
+{% block local_head %}
+    {#    {% include "component/table_components.htm" %}#}
+{#    {% include "component/chart_components.htm" %}#}
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1><span class="text-primary"><b>{{ title }}:</b></span> {% if sub_title %}<span class="text-secondary"><small><small>{{ sub_title }}</small></small></span>{% endif %}</h1>
+    </div>
+{% endblock %}

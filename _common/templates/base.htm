@@ -73,6 +73,7 @@
                             HostLock
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'hostlock:hostlock_dashboard' %}">Dashboard</a>
                             <a class="dropdown-item" href="">Current Locks</a>
                             <a class="dropdown-item" href="">My Locks</a>
                             <a class="dropdown-item" href="">My Hosts</a>
@@ -133,7 +134,7 @@
     {% endblock mainnavbar %}
 
     {% block messages %}
-{#            {% include 'component/show_messages.htm' %}#}
+        {% include 'component/show_messages.htm' %}
     {% endblock messages %}
 
 {#        <div id='page-container' class="page-container"> <!-- start "page-container" -->#}

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from django.core.exceptions import ValidationError
+from rest_framework.views import APIView
 
 # import models
 from hostlock.models import (Host, Lock)
@@ -35,7 +36,7 @@ class LockViewSet(viewsets.ModelViewSet):
     queryset = model.objects.all().select_related()
     serializer_class = LockSerializer
     filter_fields = ["id", "created_at", "updated_at", "host", "requester", "source", "request_details", "purpose",
-                     "notes", "expiration", "status", ]
+                     "notes", "expires_at", "status", ]
     search_fields = filter_fields
 
 
@@ -83,8 +84,13 @@ class GrantLockViewSet(viewsets.ViewSet):
                                            expires_at=expires_at, status="granted", no_expire=no_expire)
             lock_serializer = LockSerializer(new_lock)
             return Response(lock_serializer.data)
-        except ValidationError:
-            return Response({'message': '{} is currently locked'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+        except ValidationError as err:
+            print("TEST: ", err)
+            print(err.messages)
+            # print(err.messages)
+            print(err.message_dict)
+            # return Response({'message': '{} is currently locked'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+            return Response(err.message_dict, status.HTTP_303_SEE_OTHER)
 
 
 class ReleaseLockViewSet(viewsets.ViewSet):
@@ -169,22 +175,133 @@ class CheckLockViewSet(viewsets.ViewSet):
             return Response({'error': str(err)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class Blah(viewsets.ViewSet):
-    """ just a test """
-    @staticmethod
-    def retrieve(request, pk=None):
-        try:
-            hostname = pk
-            host = Host.objects.get_object_or_none(hostname=hostname)
-            if not host:
-                return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+class ExtendLockViewSet(viewsets.ViewSet):
+# class ExtendLockViewSet(APIView):
 
-            # get current lock (or none) for host
-            lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
-            if not lock:
-                return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
-            else:
-                lock_serializer = LockSerializer(lock)
-                return Response(lock_serializer.data)
+    """
+    Description:
+        extend an existing lock on a given host
+
+    Workflow:
+        - if there is not a lock on this host, return appropriate message with 303 status
+        - if user is the original requester of the lock, or an owner of the host, or an admin, extend the lock,
+          else, reject the request
+
+    To use:
+        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/extend_lock/host02/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded' -d '{"minutes":"4"}
+    """
+    # def get(self, request, format=None):
+    #     """
+    #     Return a list of all users.
+    #     """
+    #     usernames = [user.username for user in Host.objects.all()]
+    #     return Response(usernames)
+
+    @staticmethod
+    def update(request, pk=None):
+        """ API entry point; viewset expects a pk value; we use this as the hostname (str) """
+        hostname = pk
+        data = json.loads(request.body)
+        minutes = data.get('minutes')
+
+        # check if a host exists; return appropriate message if not
+        host = Host.objects.get_object_or_none(hostname=hostname)
+        if not host:
+            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+
+        # get current lock (or none) for host
+        lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
+
+        # check if host is currently locked; return appropriate message if not locked
+        if not lock:
+            return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
+
+        # attempt to extend the lock; return appropriate response
+        # try:
+        rc, resp = lock.extend_lock(request.user, minutes)
+        print("RESP: ", resp)
+        if resp and hasattr(resp, '__doc__'):
+            return Response({'message': resp.__doc__}, status.HTTP_303_SEE_OTHER)
+            # elif resp:
+        # except Exception as err:
+        #     print("EXCEPTION!!!!!")
+        #     return Response({'message': 'failed to extend lock'}, status.HTTP_400_BAD_REQUEST)
+    #     return Response({'message': 'lock on {} has been extended'.format(hostname)}, status.HTTP_200_OK)
+    # except ValidationError as err:
+    #     print("TEST: ", err)
+        return Response({'message': 'blah'}, status.HTTP_200_OK)
+
+
+# class Blah(viewsets.ViewSet):
+#     """ just a test """
+#     @staticmethod
+#     def retrieve(request, pk=None):
+#         try:
+#             hostname = pk
+#             host = Host.objects.get_object_or_none(hostname=hostname)
+#             if not host:
+#                 return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+#
+#             # get current lock (or none) for host
+#             lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
+#             if not lock:
+#                 return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
+#             else:
+#                 lock_serializer = LockSerializer(lock)
+#                 return Response(lock_serializer.data)
+#         except Exception as err:
+#             return Response({'error': str(err)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Blah(APIView):
+    """ """
+    # def get(self, request, format=None):
+    #     snippets = Snippet.objects.all()
+    #     serializer = SnippetSerializer(snippets, many=True)
+    #     return Response(serializer.data)
+
+    # def post(self, request, format=None):
+    #     serializer = SnippetSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request):
+        """ """
+        data = json.loads(request.body)
+        hostname = data.get('hostname')
+        minutes = data.get('minutes')
+        print("TEST: your hostname is: ", hostname)
+        print("TEST: minutes: ", minutes)
+
+        # check if a host exists; return appropriate message if not
+        host = Host.objects.get_object_or_none(hostname=hostname)
+        if not host:
+            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+
+        # get current lock (or none) for host
+        lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
+
+        # check if host is currently locked; return appropriate message if not locked
+        if not lock:
+            return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
+
+        # try to extend the lock
+        # rc, resp = lock.extend_lock(request.user, minutes)
+        try:
+            resp = lock.extend_lock(request.user, minutes)
+            print("RESP: ", resp)
         except Exception as err:
-            return Response({'error': str(err)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            print("EXCEPTION: ", err)
+            error_messages = err.messages or []
+            return Response({'errors': error_messages}, status.HTTP_400_BAD_REQUEST)
+        # print("RESP: ", resp)
+        # if resp and hasattr(resp, '__doc__'):
+        #     return Response({'message': resp.__doc__}, status.HTTP_303_SEE_OTHER)
+
+        return Response({'message': 'blah'}, status.HTTP_200_OK)
+
+
+
+# https://www.django-rest-framework.org/tutorial/3-class-based-views/

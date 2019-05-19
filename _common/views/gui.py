@@ -36,6 +36,14 @@ class ShowUserProfile(LoginRequiredMixin, View):
         return render(request, "detail/detail_current_user.html", context)
 
 
+class ShowAdminPage(View):
+    """ show the admin page """
+    @staticmethod
+    def get(request):
+        context = dict()
+        return render(request, "custom/padlock_admin.html", context)
+
+
 class UpdateApiToken(LoginRequiredMixin, View):
     """ delete current user token and create a new one """
     def post(self, request):
@@ -48,3 +56,7 @@ class UpdateApiToken(LoginRequiredMixin, View):
             messages.add_message(request, messages.ERROR, "Could not complete requested action",
                                  extra_tags='alert-danger')
         return redirect(redirect_url)
+
+
+class CreateServiceAccount():
+    pass
