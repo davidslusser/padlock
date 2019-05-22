@@ -20,3 +20,15 @@ class LockSerializer(serializers.ModelSerializer):
         fields = ["id", "created_at", "updated_at", "host", "requester", "source", "request_details", "purpose",
                   "notes", "expires_at", "status", ]
         depth = 0
+
+
+class ExtendLockSerializer(serializers.Serializer):
+    # id = serializers.IntegerField(read_only=True)
+    # name = serializers.CharField(max_length=256)
+    # owner = serializers.CharField(max_length=256)
+    message = serializers.CharField(max_length=256)
+
+    def update(self, instance, validated_data):
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        return instance

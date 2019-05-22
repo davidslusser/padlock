@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     # padlock apps
+    '_common',
     'hostlock',
 ]
 
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'padlock.middleware.userpreferences.UserRecentsMiddleware',
 ]
 
 ROOT_URLCONF = 'padlock.urls'

@@ -17,7 +17,8 @@ router.register(r'lock', apis.LockViewSet, "lock")
 router.register(r'check_lock', apis.CheckLockViewSet, "check_lock")
 router.register(r'release_lock', apis.ReleaseLockViewSet, "release_lock")
 router.register(r'grant_lock', apis.GrantLockViewSet, "grant_lock")
-router.register(r'extend_lock', apis.ExtendLockViewSet, "extend_lock")
+# router.register(r'extend_lock', apis.ExtendLockViewSet, "extend_lock")
+
 
 
 urlpatterns = [
@@ -27,6 +28,8 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     # path('api/v1/blah/<str:hostname>/', apis.Blah.as_view()),
     path('api/v1/blah/', apis.Blah.as_view()),
+    path('api/v1/extend_lock/', apis.ExtendLockViewSet.as_view()),
+
 
 
     # home page urls

@@ -158,7 +158,8 @@ class Lock(PadlockBaseModel):
             print('max extends reached!')
             # return "balh"
             # return MaxLockExtensionReached
-            raise MaxLockExtensionReached({'host': 'this host can not be extended further'})
+            raise MaxLockExtensionReached('{} has been extended {} times and can not be extended further'.format(
+                self.host, self.extend_count))
             # raise MaxLockExtensionReached(None )
             # raise ValidationError({'host': 'this host can not be extended further'})
 

@@ -119,7 +119,10 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'detail_user' %}"><i class="fa fa-address-card fw margin-right-20"></i>Profile</a>
                                 <a class="dropdown-item" href="#"><b class="fa fa-cogs fw margin-right-20 text-greyout"></b>Settings</a>
-                                <a class="dropdown-item" href="#"><b class="fa fa-star fw margin-right-20 text-greyout"></b>Favorites</a>
+                                <a class="dropdown-item" href="{% url '_common:list_recents' %}"><b class="far fa-clock fw margin-right-20"></b>Recents</a>
+                                <a class="dropdown-item" href="{% url '_common:list_favorites' %}"><b class="fa fa-star fw margin-right-20"></b>Favorites</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#"><b class="far fa-star fw margin-right-20 text-greyout"></b>Add Favorite</a>
                             </div>
                         </li>
                     {% else %}

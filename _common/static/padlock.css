@@ -24,7 +24,7 @@
 
 th {
     background-color: var(--primary);
-    color: white;
+    color: var(--light);
 }
 .table-striped tbody > tr:nth-child(even) > td,
 .table-striped tbody > tr:nth-child(even) > th {
@@ -42,3 +42,22 @@ th {
     /*text-decoration: none;*/
     /*outline: none;*/
 /*}*/
+
+
+
+
+.nav-tabs { border-bottom: 5px solid var(--light); }
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: var(--primary);
+    background-color: var(--secondary);
+    font-size: large;
+    font-weight: bold;
+
+}
+.nav-tabs .nav-link {
+    color: var(--primary);
+    background-color: var(--light);
+    font-size: large;
+
+}

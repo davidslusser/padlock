@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from hostlock.models import (Host, Lock)
 
 # import serializers
-from hostlock.apis.serializers import (HostSerializer, LockSerializer)
+from hostlock.apis.serializers import (HostSerializer, LockSerializer, ExtendLockSerializer)
 
 
 class HostViewSet(viewsets.ModelViewSet):
@@ -175,9 +175,7 @@ class CheckLockViewSet(viewsets.ViewSet):
             return Response({'error': str(err)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class ExtendLockViewSet(viewsets.ViewSet):
-# class ExtendLockViewSet(APIView):
-
+class ExtendLockViewSet(APIView):
     """
     Description:
         extend an existing lock on a given host
@@ -188,20 +186,16 @@ class ExtendLockViewSet(viewsets.ViewSet):
           else, reject the request
 
     To use:
-        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/extend_lock/host02/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded' -d '{"minutes":"4"}
-    """
-    # def get(self, request, format=None):
-    #     """
-    #     Return a list of all users.
-    #     """
-    #     usernames = [user.username for user in Host.objects.all()]
-    #     return Response(usernames)
+        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/extend_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded' -d '{"hostname":"host5", "minutes":"4"}'
 
-    @staticmethod
-    def update(request, pk=None):
+    """
+    serializer_class = LockSerializer
+
+    def put(self, request):
         """ API entry point; viewset expects a pk value; we use this as the hostname (str) """
-        hostname = pk
+        # hostname = pk
         data = json.loads(request.body)
+        hostname = data.get('hostname')
         minutes = data.get('minutes')
 
         # check if a host exists; return appropriate message if not
@@ -217,19 +211,11 @@ class ExtendLockViewSet(viewsets.ViewSet):
             return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
 
         # attempt to extend the lock; return appropriate response
-        # try:
-        rc, resp = lock.extend_lock(request.user, minutes)
-        print("RESP: ", resp)
-        if resp and hasattr(resp, '__doc__'):
-            return Response({'message': resp.__doc__}, status.HTTP_303_SEE_OTHER)
-            # elif resp:
-        # except Exception as err:
-        #     print("EXCEPTION!!!!!")
-        #     return Response({'message': 'failed to extend lock'}, status.HTTP_400_BAD_REQUEST)
-    #     return Response({'message': 'lock on {} has been extended'.format(hostname)}, status.HTTP_200_OK)
-    # except ValidationError as err:
-    #     print("TEST: ", err)
-        return Response({'message': 'blah'}, status.HTTP_200_OK)
+        try:
+            lock.extend_lock(request.user, minutes)
+            return Response(self.serializer_class.data)
+        except Exception as err:
+            return Response({'messages': err}, status.HTTP_303_SEE_OTHER)
 
 
 # class Blah(viewsets.ViewSet):

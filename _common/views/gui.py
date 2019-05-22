@@ -4,19 +4,38 @@ Description:
 """
 
 from django.http import HttpResponse
-from django.views.generic import (View, TemplateView)
+from django.views.generic import (View, ListView, TemplateView, DeleteView)
 from django.shortcuts import render, redirect
 from django.contrib import messages
-
+from djangohelpers.views import FilterByQueryParamsMixin
 from rest_framework import response, schemas
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
-
 from braces.views import LoginRequiredMixin, GroupRequiredMixin
 
 
-# Create your views here.
+# import models
+from _common.models import (UserPreferences, UserRecent, UserFavorite)
+
+
+
+class PadlockBaseListView(FilterByQueryParamsMixin, ListView):
+    """ base view for shared PadLock listviews """
+    title = None
+    table = None
+    request = None
+
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        template = "generic/generic_list.html"
+        context['queryset'] = self.filter_by_query_params()
+        context['title'] = self.title
+        context['sub_title'] = self.page_description
+        context['table'] = self.table
+        return render(request, template, context=context)
+
+
 @api_view()
 @renderer_classes([OpenAPIRenderer, SwaggerUIRenderer])
 def schema_view(request):
@@ -59,4 +78,37 @@ class UpdateApiToken(LoginRequiredMixin, View):
 
 
 class CreateServiceAccount():
+    pass
+
+
+class ListRecents(LoginRequiredMixin, FilterByQueryParamsMixin, ListView):
+    """  """
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        self.queryset = UserRecent.objects.filter(user=request.user).order_by('-updated_at')
+        template = "generic/generic_list.html"
+        context['queryset'] = self.filter_by_query_params()
+        context['title'] = "Recents"
+        context['sub_title'] = request.user.username
+        context['table'] = "table/table_recents.htm"
+        return render(request, template, context=context)
+
+
+class ListFavorites(LoginRequiredMixin, PadlockBaseListView):
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        self.queryset = UserFavorite.objects.filter(user=request.user).order_by('-updated_at')
+        template = "generic/generic_list.html"
+        context['queryset'] = self.filter_by_query_params()
+        context['title'] = "Recents"
+        context['sub_title'] = request.user.username
+        context['table'] = "table/table_favorites.htm"
+        return render(request, template, context=context)
+
+
+class DeleteRecent():
+    pass
+
+
+class DeleteFavorite():
     pass
