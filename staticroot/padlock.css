@@ -1,0 +1,84 @@
+.margin-right-20 {
+    margin-right: 20px !important;
+}
+
+.text-greyout {
+    color: lightgrey;
+    font-style: italic;
+}
+
+.card-deck a, a:hover{
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-link {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.table-action-icon{
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+th {
+    background-color: var(--primary);
+    color: white;
+}
+.table-striped tbody > tr:nth-child(even) > td,
+.table-striped tbody > tr:nth-child(even) > th {
+    background-color: var(--light);
+}
+
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+    background-color: var(--secondary);
+}
+
+
+
+/*a:hover,a:focus{*/
+    /*text-decoration: none;*/
+    /*outline: none;*/
+/*}*/
+
+
+
+
+.nav-tabs { border-bottom: 5px solid whitesmoke; }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover { border-width: 0; color: var(--box_cyan);}
+.nav-tabs > li > a {
+    border: none;
+    color: #666;
+    font-size: 1.5em !important;
+    background-color: darkgrey;
+}
+.nav-tabs > li.active > a, .nav-tabs > li > a:hover {
+    border: none;
+    color: var(--box_cyan);
+    background-color: darkgrey;
+    /*/important; background: transparent;*/
+/important; background: white;
+    color: #666;
+}
+.nav-tabs > li > a::after {
+    content: "";
+    background: var(--box_cyan);
+    height: 2px;
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    bottom: -1px;
+    transition: all 250ms ease 0s;
+    transform: scale(0);
+}
+.nav-tabs > li.active > a::after, .nav-tabs > li:hover > a::after { transform: scale(1); }
+.tab-nav > li > a::after {
+    background: #21527d none repeat scroll 0% 0%;
+    color: #fff;
+}
+.tab-pane { padding: 15px 0; }
+.tab-content{
+    padding:20px
+}

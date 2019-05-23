@@ -1,0 +1,89 @@
+{% extends "base.htm" %}
+{% load staticfiles %}
+
+{% block local_head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" integrity="sha256-HtCCUh9Hkh//8U1OwcbD8epVEUdBvuI8wj1KtqMhNkI=" crossorigin="anonymous" />
+{% endblock %}
+
+{% block content %}
+<section class="animated fadeIn">
+    <header>
+        <div class="headline text-center">
+            <br/>
+            <div class="container mb-5">
+                <h1 class="text-primary"><b>Welcome to PadLock!</b></h1>
+                <h5>Select an option below to continue</h5>
+            </div>
+        </div>
+    </header>
+</section>
+
+<section class="animated fadeIn">
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap align-items-center justify-content-center">
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="{% url 'hostlock:hostlock_dashboard' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fas fa-chart-line"></i></h2>
+                        <h3 class="card-title text-primary">Dashboard</h3>
+                        <p class="card-text">See the latest lock stats and activity</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="{% url 'hostlock:list_locks' %}?status=granted&page_description=currently granted">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-lock fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">Locks</h3>
+                        <p class="card-text">View hosts that are currently locked</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="{% url 'hostlock:list_hosts' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-server fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">Hosts</h3>
+                        <p class="card-text">List host and view lock history</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="{% url 'hostlock:list_my_locks' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-user-lock fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">My Locks</h3>
+                        <p class="card-text">Manage locks on hosts that you or a team member locked</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="{% url '_common:show_admin' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-id-badge fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">Admin</h3>
+                        <p class="card-text">Access the administrator features</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow m-4" style="background-color: whitesmoke; width: 350px; height: 180px;">
+                <a href="/admin">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fab fa-python"></i></h2>
+                        <h3 class="card-title text-primary">Django Console</h3>
+                        <p class="card-text">Access the django administrator console</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{% endblock content %}

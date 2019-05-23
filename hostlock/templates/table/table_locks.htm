@@ -1,0 +1,50 @@
+<table class="table table-condensed table-bordered table-striped" data-toggle="table" data-search="true"
+       data-flat="true" data-pagination="true" data-show-pagination-switch="true" data-show-columns="true"
+       data-show-export="true" data-reorderable-columns="true" data-resizable="false" data-export-types="['excel','csv','txt','sql']">
+    <thead>
+    <tr>
+        <th data-field="host" data-sortable="true">Host</th>
+        <th data-field="status" data-sortable="true">Status</th>
+        <th data-field="requester" data-sortable="true">Requester</th>
+        <th data-field="owner" data-sortable="true">Owner</th>
+        <th data-field="created_at" data-sortable="true">Created At</th>
+        <th data-field="expiration" data-sortable="true">Expires At</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in queryset %}
+        <tr>
+            <td>{{ row.host }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ row.requester }}</td>
+            <td>{{ row.host.owner }}</td>
+            <td>{{ row.created_at|date:'Y-m-d H:i:s' }}</td>
+            <td>{{ row.expires_at|date:'Y-m-d H:i:s' }}</td>
+            <!-- actions -->
+            <td>
+                <!-- manually unlock host -->
+                <a href="#" class="table-action-icon" title="unlock host"
+                   onClick="confirmAction('{% url 'hostlock:release_host_lock' %}?id={{ row.id }}', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"
+                   role="button" data-toggle="tooltip" data-placement="left">
+                    <i class="fa fa-lock-open"></i>
+                </a>
+
+{#                <!-- extend lock -->#}
+{#                <a href="#" class="table-action-icon" title="extend lock time"#}
+{#                   onClick="confirmAction('{% url 'hostlock:release_host_lock' %}?id={{ row.id }}', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"#}
+{#                   role="button" data-toggle="tooltip" data-placement="left">#}
+{#                    <i class="fa fa-lock"></i>#}
+{#                </a>#}
+
+                <!-- view lock history -->
+                <a href="#" class="table-action-icon" title="view audit log"
+                   onClick="showInfo('{% url "hostlock:get_lock_auditlog" %}', '{{ row.id }}', 'Audit Log: <small><i>{{ row.host }}</i></small>', 'xl');"
+                   role="button" data-toggle="tooltip" data-placement="left">
+                    <i class="fa fa-history fa-fw"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

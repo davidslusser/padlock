@@ -1,9 +1,19 @@
+# import system modules
+from datetime import timedelta
+import logging
+
+# import django modules
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import Group, Permission, User
 from django.core.exceptions import ValidationError
 from djangohelpers.managers import HandyHelperModelManager
+
+# import third party modules
 from auditlog.registry import auditlog
+
+# import PadLock modules
+from _common.exceptions import (UserNotAuthorized, HostLocked, LockExpireMissing, MaxLockExtensionReached)
 
 
 lock_status_choices = (
@@ -13,12 +23,6 @@ lock_status_choices = (
     ('expired', 'expired'),
 )
 
-lock_action_choices = (
-    ('grant', 'grant'),
-    ('released', 'released'),
-    ('extend', 'extend'),
-    ('detail', 'detail'),
-)
 
 lock_state_choices = (
     ("locked", "locked"),
@@ -39,7 +43,8 @@ class PadlockBaseModel(models.Model):
 class Host(PadlockBaseModel):
     """ table to track hosts """
     hostname = models.CharField(max_length=64, unique=True, help_text="unique fqdn of a host")
-    owner = models.ForeignKey(Group, blank=True, null=True, on_delete=models.CASCADE, help_text="group that owns this host")
+    owner = models.ForeignKey(Group, blank=True, null=True, on_delete=models.CASCADE,
+                              help_text="group that owns this host")
     is_locked = models.BooleanField(default=False, help_text="select if this host is currently locked")
 
     class Meta:
@@ -52,32 +57,123 @@ class Host(PadlockBaseModel):
 class Lock(PadlockBaseModel):
     """ track the details and results of a lock action request """
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
-    requester = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, help_text="user requesting this lock")
+    requester = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
+                                  help_text="user requesting this lock")
     source = models.CharField(max_length=128, blank=True, null=True, help_text="location this lock was requested from")
     request_details = models.CharField(max_length=255, blank=True, null=True, help_text="details of the request")
     purpose = models.CharField(max_length=254, blank=True, null=True, help_text="details regarding this lock request")
     notes = models.CharField(max_length=255, blank=True, null=True, help_text="additional notes regarding this lock")
-    expiration = models.IntegerField(default=900, blank=True, null=True,
-                                     help_text="time (in seconds) from creation that this lock will expire")
-    status = models.CharField(max_length=16, choices=lock_status_choices, default="unknown", help_text="current status of this lock")
+    expires_at = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(minutes=15),
+                                      help_text="date/time when this lock expires")
+    status = models.CharField(max_length=32, choices=lock_status_choices, default="unknown",
+                              help_text="current status of this lock")
+    no_expire = models.BooleanField(default=False, help_text="set to True if this lock does not expire")
+    extend_count = models.IntegerField(default=0, help_text="number of times this lock has been extended")
 
     class Meta:
-        db_table = 'hostlock_logs'
+        db_table = 'hostlock_locks'
 
     def clean(self):
-        # if not self.pk and self.status == 'granted' and Lock.objects.filter(host=self.host, status='granted'):
-        #     raise ValidationError({'host': 'this host is currently locked'})
+        # set the expiration default (for a new lock) if None
+        # if not self.pk and not self.expiration:
+        #     self.expiration = 900
+        if not self.expires_at and not self.no_expire:
+            self.expires_at = timezone.now() + timedelta(minutes=15)
 
         # check for existing lock on a host
         existing_lock = Lock.objects.get_object_or_none(host=self.host, status='granted')
 
-        print("TEST: ", self.status)
         if not self.pk and existing_lock:
             # check if lock is expired; set as expired and create new if expired, else reject grant
-            if (timezone.now() - existing_lock.created_at).seconds > existing_lock.expiration:
+            # if existing_lock.expiration in [None, 0]:
+            #     raise ValidationError({'host': 'this host is currently locked'})
+            # elif (timezone.now() - existing_lock.created_at).seconds > existing_lock.expiration:
+            #     Lock.objects.filter(pk=existing_lock.pk).update(status="expired")
+            if not self.expires_at:
+                raise ValidationError({'host': 'this host is currently locked'})
+            elif timezone.now() > existing_lock.expires_at:
                 Lock.objects.filter(pk=existing_lock.pk).update(status="expired")
             else:
                 raise ValidationError({'host': 'this host is currently locked'})
+                # raise ValidationError('this host is currently locked')
+
+    def release_lock(self, user, manual=False):
+        """ release the current lock """
+        user_can_manage_lock = False
+        if user is self.requester:
+            user_can_manage_lock = True
+        elif user.is_superuser:
+            user_can_manage_lock = True
+        elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
+            user_can_manage_lock = True
+        if not user_can_manage_lock:
+            return 1
+        if manual:
+            self.status = "manually released"
+        else:
+            self.status = "released"
+        self.save()
+        return 0
+
+    def extend_lock(self, user, minutes):
+        """
+        extend lock by <minutes> minutes
+        :param user: user object
+        :param minutes: minutes to extend lock by <int>
+        :return: <int>
+            0 if successful
+            1 if error encountered
+        """
+        # try:
+            # print('requester: "{}"'.format(self.requester))
+            # print('user: "{}"'.format(user))
+            # print(user.username is self.requester.username)
+        user_can_manage_lock = False
+        if user == self.requester:
+            # print('user is requester')
+            user_can_manage_lock = True
+        elif user.is_superuser:
+            # print('user is superuser')
+            user_can_manage_lock = True
+        elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
+            # print('user is in a matching group')
+            user_can_manage_lock = True
+
+        print("TEST: ", user_can_manage_lock)
+        if user_can_manage_lock in [False, None]:
+            # print('no soup for you!')
+            return UserNotAuthorized
+
+        # do not allow extend if no expires_at is set
+        # try:
+        if not self.expires_at or self.no_expire:
+            print("can't extent this one!")
+            return LockExpireMissing
+        # except LockCanNotBeExtended:
+        #     print("BLAH")
+
+        # do not allow extend if maximum extends have been reached
+        max_extend = 3
+        if self.extend_count >= max_extend:
+            print('max extends reached!')
+            # return "balh"
+            # return MaxLockExtensionReached
+            raise MaxLockExtensionReached('{} has been extended {} times and can not be extended further'.format(
+                self.host, self.extend_count))
+            # raise MaxLockExtensionReached(None )
+            # raise ValidationError({'host': 'this host can not be extended further'})
+
+            # return 0
+        print('extending the lock...')
+        minutes = int(minutes)
+        new_expire = self.expires_at + timedelta(minutes=minutes)
+        extend_count = self.extend_count + 1
+        Lock.objects.filter(pk=self.pk).update(expires_at=new_expire, extend_count=extend_count)
+        return 0
+        # except Exception as err:
+        #     logging.error(err)
+        #     print("OOPS: ", err)
+        #     return 1
 
     def save(self, *args, **kwargs):
         self.full_clean()

@@ -1,0 +1,78 @@
+{% extends "base.htm" %}
+{% load staticfiles %}
+
+
+{% block content %}
+<section>
+    <header>
+        <div class="headline text-center">
+            <br/>
+            <div class="container">
+                <h1 class="text-primary"><b>Welcome to PadLock!</b></h1>
+                <h5>Select an option below to continue</h5>
+                <br/><br/>
+            </div>
+        </div>
+    </header>
+</section>
+
+<section>
+    <div class="container-fluid">
+        <div class="card-deck">
+            <div class="card mb-4 text-center hvr-grow">
+                <a href="{% url 'hostlock:list_locks' %}?status=granted&page_description=currently granted">
+                <div class="card-body">
+                    <h2 class="card-title text-primary"><i class="fa fa-lock fa-fw"></i></h2>
+                    <h3 class="card-title text-primary">Locks</h3>
+                    <p class="card-text">View hosts that are currently locked</p>
+                </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow">
+                <a href="{% url 'hostlock:list_hosts' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-server fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">Hosts</h3>
+                        <p class="card-text">List host and view lock history</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="w-100 d-none d-sm-block d-md-none"><!-- wrap every 2 on sm--></div>
+
+            <div class="card mb-4 text-center hvr-grow">
+                <a href="{% url 'hostlock:list_my_locks' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-user-lock fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">My Locks</h3>
+                        <p class="card-text">Manage locks on hosts that you or a team member locked</p>
+                    </div>
+                </a>
+            </div>
+            <div class="w-100 d-none d-md-block d-lg-none"><!-- wrap every 3 on md--></div>
+            <div class="card mb-4 text-center hvr-grow">
+                <a href="{% url '_common:show_admin' %}">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fa fa-id-badge fa-fw"></i></h2>
+                        <h3 class="card-title text-primary">Admin</h3>
+                        <p class="card-text">Access the administrator features</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card mb-4 text-center hvr-grow">
+                <a href="/admin">
+                    <div class="card-body">
+                        <h2 class="card-title text-primary"><i class="fab fa-python"></i></h2>
+                        <h3 class="card-title text-primary">Django Console</h3>
+                        <p class="card-text">Access the django administrator console</p>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+{% endblock content %}

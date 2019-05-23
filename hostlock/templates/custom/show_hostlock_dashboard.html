@@ -1,0 +1,204 @@
+{% extends "base.htm" %}
+{% load staticfiles %}
+
+{% block local_head %}
+{#    {% include "component/table_components.htm" %}#}
+    {% include "component/chart_components.htm" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" integrity="sha256-HtCCUh9Hkh//8U1OwcbD8epVEUdBvuI8wj1KtqMhNkI=" crossorigin="anonymous" />
+{% endblock %}
+
+{% block content %}
+
+    <section class="mt-3 animated fadeIn"> <!-- show lock counts -->
+        <div class="container-fluid">
+            <div class="row">
+
+                <!-- granted locks -->
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
+                    <div class="card bg-light boarder border-primary">
+                        <div class="card-body pb-1">
+                            <div class="btn-group float-right">
+                                <div>
+                                    <i class="fas fa-list-ul text-secondary"></i>
+                                </div>
+                            </div>
+                            <div class="text-value"><h1 style="font-size: 68;"><b>{{ granted_locks.count }}</b></h1></div>
+                            <div><small>Granted Locks</small></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- expired locks -->
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
+                    <div class="card bg-light boarder border-primary">
+                        <div class="card-body pb-1">
+                            <div class="btn-group float-right">
+                                <div>
+                                    <i class="fas fa-list-ul text-secondary"></i>
+                                </div>
+                            </div>
+                            <div class="text-value"><h1 style="font-size: 68;"><b>{{ expired_locks.count }}</b></h1></div>
+                            <div><small>Expired Locks</small></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- manageable locks -->
+                <div class="col-sm-4 col-md-4 col-lg-4 mb-2">
+                    <div class="card bg-light boarder border-primary">
+                        <div class="card-body pb-1">
+                            <div class="btn-group float-right">
+                                <div>
+                                    <i class="fas fa-list-ul text-secondary"></i>
+                                </div>
+                            </div>
+                            <div class="text-value"><h1 style="font-size: 68;"><b>{{ manageable_locks.count }}</b></h1></div>
+                            <div><small>Manageable Locks</small></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <section class="mt-5 animated fadeIn"> <!-- show daily trend graph -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="text-center col-sm-12 col-md-12 col-lg-12">
+                    <div class="card border border-primary" style="background-color: transparent;">
+                        <div class="card-body" style="background-color: transparent;">
+                            <div class="chart-wrapper p-1" style="height: 450px">
+                                <canvas id="lock_trends"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="mt-5 animated fadeIn"> <!-- list locks -->
+        <div class="container-fluid">
+            <div class="row">
+                <!-- current locks -->
+                <div class="col-md-6 mb-2">
+                    <div class="card border border-primary">
+                        <h4 class="card-header bg-primary text-white text-center">Current Locks</h4>
+                        <div class="card-body" style="background-color: lightgray">
+{#                            <div class="overflow-auto" style="height: 400px; overflow-y: scroll;">#}
+                            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+                                <ul class="list-group mx-auto justify-content-center" style="max-width: 92%; margin-top: .5%; margin-bottom: .5%">
+                                    {% for lock in current_locks %}
+                                        <li class="list-group-item hvr-grow m-1 bg-light">
+                                            <div class="row h-100 flex-nowrap">
+                                                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-left">
+                                                    <h3><i class="fa fa-desktop fa-fw"></i></h3>
+                                                </div>
+                                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+                                                    <div class="row"><b>{{ lock.host }}</b></div>
+                                                    <div class="row">
+                                                        <small style="font-size: 10px"><b>Expires: </b>{% if lock.expires_at %}{{ lock.expires_at|date:'Y-m-d H:i:s' }}{% else %} never {% endif %}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
+                                                    <a href=""><i class="fa fa-info-circle fa-fw text-secondary"></i></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- expired locks -->
+                <div class="col-md-6 mb-2">
+                    <div class="card border border-primary">
+                        <h4 class="card-header bg-primary text-white text-center">Expired Locks</h4>
+                        <div class="card-body" style="background-color: lightgray">
+                            <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+                                <ul class="list-group mx-auto justify-content-center text-danger" style="max-width: 91%; margin-top: .5%; margin-bottom: .5%">
+                                    {% for lock in expired_locks %}
+                                        <li class="list-group-item hvr-grow m-1 bg-light">
+                                            <div class="row h-100 flex-nowrap">
+                                                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-left">
+                                                    <h3><i class="fa fa-desktop fa-fw"></i></h3>
+                                                </div>
+                                                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-left">
+                                                    <div class="row"><b>{{ lock.host }}</b></div>
+                                                    <div class="row">
+                                                        <small style="font-size: 10px"><b>Expired: </b>{{ lock.expires_at|date:'Y-m-d H:i:s' }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
+                                                    <a href="" class="text-danger"><i class="fa fa-info-circle fa-fw"></i></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+<br/><br/>
+<span>&nbsp</span>
+
+<script>
+    var style = getComputedStyle(document.body);
+    var theme = {};
+
+    theme.primary = style.getPropertyValue('--primary');
+    theme.secondary = style.getPropertyValue('--secondary');
+    theme.success = style.getPropertyValue('--success');
+    theme.info = style.getPropertyValue('--info');
+    theme.warning = style.getPropertyValue('--warning');
+    theme.danger = style.getPropertyValue('--danger');
+    theme.light = style.getPropertyValue('--light');
+    theme.dark = style.getPropertyValue('--dark');
+
+    new Chart(document.getElementById("lock_trends"), {
+        type: 'line',
+        data: {
+            labels: [{% for k in trend_data.granted.keys %} {{ k }}, {% endfor %}],
+            datasets: [{
+                data: [{% for v in trend_data.granted.values %} {{ v }}, {% endfor %}],
+                label: "Granted",
+                borderColor: theme.primary,
+                fill: false
+            }, {
+                data: [{% for v in trend_data.released.values %} {{ v }}, {% endfor %}],
+                label: "Released",
+                borderColor: theme.warning,
+                fill: false
+            }, {
+                data: [{% for v in trend_data.expired.values %} {{ v }}, {% endfor %}],
+                label: "Expired",
+                borderColor: theme.danger,
+                fill: false
+            }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            title: {
+                display: true,
+                text: 'Lock activity in the past 24 hours'
+            },
+            legend: {
+                position: 'bottom',
+            }
+        }
+    });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,63 @@
+.margin-right-20 {
+    margin-right: 20px !important;
+}
+
+.text-greyout {
+    color: lightgrey;
+    font-style: italic;
+}
+
+.card-deck a, a:hover{
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-link {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.table-action-icon{
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+th {
+    background-color: var(--primary);
+    color: var(--light);
+}
+.table-striped tbody > tr:nth-child(even) > td,
+.table-striped tbody > tr:nth-child(even) > th {
+    background-color: var(--light);
+}
+
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+    background-color: var(--secondary);
+}
+
+
+
+/*a:hover,a:focus{*/
+    /*text-decoration: none;*/
+    /*outline: none;*/
+/*}*/
+
+
+
+
+.nav-tabs { border-bottom: 5px solid var(--light); }
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: var(--primary);
+    background-color: var(--secondary);
+    font-size: large;
+    font-weight: bold;
+
+}
+.nav-tabs .nav-link {
+    color: var(--primary);
+    background-color: var(--light);
+    font-size: large;
+
+}
