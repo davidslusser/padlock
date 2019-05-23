@@ -93,7 +93,7 @@ class GrantLockViewSet(viewsets.ViewSet):
             return Response(err.message_dict, status.HTTP_303_SEE_OTHER)
 
 
-class ReleaseLockViewSet(viewsets.ViewSet):
+class ReleaseLockViewSet(APIView):
     """
     Description:
         release a lock on a given host
@@ -104,17 +104,17 @@ class ReleaseLockViewSet(viewsets.ViewSet):
           else, reject the release request
 
     To use:
-        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/release_lock/host1/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded'
+        curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/release_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -d '{"hostname":"host4"}
     """
-    @staticmethod
-    def update(request, pk=None):
+    def put(self, request):
         """ API entry point; viewset expects a pk value; we use this as the hostname (str) """
-        hostname = pk
+        data = json.loads(request.body)
+        hostname = data.get('hostname')
 
         # check if a host exists; return appropriate message if not
         host = Host.objects.get_object_or_none(hostname=hostname)
         if not host:
-            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_400_BAD_REQUEST)
 
         # get current lock (or none) for host
         lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
@@ -123,23 +123,12 @@ class ReleaseLockViewSet(viewsets.ViewSet):
         if not lock:
             return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
 
-        # verify user can release this lock (must be original requester, an admin, or an owner)
-        user_can_release_lock = False
-        if request.user is lock.requester:
-            user_can_release_lock = True
-        elif request.user.is_superuser:
-            user_can_release_lock = True
-        elif request.user.groups.filter(name=getattr(lock.host.owner, 'name', None)):
-            user_can_release_lock = True
-
-        # release the lock if allowed
-        if user_can_release_lock:
-            lock.status = "released"
-            lock.save()
-            return Response({'message': 'lock on {} has been released'.format(hostname)}, status.HTTP_200_OK)
-        else:
-            return Response({'message': 'you are not authorized to release the lock on {}'.format(hostname)},
-                            status.HTTP_401_UNAUTHORIZED)
+        # attempt to release the lock; return appropriate response
+        try:
+            lock.release_lock(request.user)
+            return Response({'message': 'lock on {} successfully released'.format(hostname)}, status.HTTP_200_OK)
+        except Exception as err:
+            return Response({'messages': err}, status.HTTP_400_BAD_REQUEST)
 
 
 class CheckLockViewSet(viewsets.ViewSet):
@@ -201,7 +190,7 @@ class ExtendLockViewSet(APIView):
         # check if a host exists; return appropriate message if not
         host = Host.objects.get_object_or_none(hostname=hostname)
         if not host:
-            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_303_SEE_OTHER)
+            return Response({'message': 'host {} was not found'.format(hostname)}, status.HTTP_400_BAD_REQUEST)
 
         # get current lock (or none) for host
         lock = Lock.objects.get_object_or_none(host__hostname=hostname, status='granted')
@@ -215,7 +204,7 @@ class ExtendLockViewSet(APIView):
             lock.extend_lock(request.user, minutes)
             return Response(self.serializer_class.data)
         except Exception as err:
-            return Response({'messages': err}, status.HTTP_303_SEE_OTHER)
+            return Response({'messages': err}, status.HTTP_400_BAD_REQUEST)
 
 
 # class Blah(viewsets.ViewSet):

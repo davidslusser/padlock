@@ -68,19 +68,20 @@
                     <div class="col-sm-4">
                         <span class="text-primary"><b>API Token:</b></span>
                     </div>
-                    <div class="col-sm-8">
-                    {{ token }} &nbsp;&nbsp;
-                    <a href="#" class="atmo-link-padding atmo-link-text" title="refresh token"
-                          onClick="confirmAction('{% url "_common:update_token" %}', 'Update Token', 'This will delete your API token and create a new one. Do you wish to continue?', 'Continue', 'POST');"
-                          role="button" data-toggle="tooltip" data-placement="left">
-                        <i class="fas fa-sync-alt"></i>
-                    </a>
+                        <div class="col-sm-8">
+                        {{ token }} &nbsp;&nbsp;
+                        <a href="#" class="atmo-link-padding atmo-link-text" title="refresh token"
+                              onClick="confirmAction('{% url "_common:update_token" %}', 'Update Token', 'This will delete your API token and create a new one. Do you wish to continue?', 'Continue', 'POST');"
+                              role="button" data-toggle="tooltip" data-placement="left">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="m-4">&nbsp;</div>
     <div class="container mb-4"> <!-- group memberships -->
         <div class="row">
             <div class="col-sm-2"><i class="fas fa-users fa-5x text-primary"></i></div>
@@ -105,29 +106,29 @@
         </div>
     </div>
 
-    <div class="container mb-4"> <!-- service accounts -->
-        <div class="row">
-            <div class="col-sm-2"><i class="far fa-address-users fa-5x text-primary"></i></div>
-            <div class="col-sm-10">
-                <div class="row border-bottom border-light p-2">
-                    <div class="col-sm-4">
-                        <span class="text-primary"><b>Group Memberships:</b></span>
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="row">
-                            {% if groups %}
-                                {% for group in groups %}
-                                    <div class="col-sm-12 col-md-8 col-lg-4">{{ group }}</div>
-                                {% endfor %}
-                            {% else %}
-                                <div>no group memberships found</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <div class="container mb-4"> <!-- service accounts -->#}
+{#        <div class="row">#}
+{#            <div class="col-sm-2"><i class="far fa-address-users fa-5x text-primary"></i></div>#}
+{#            <div class="col-sm-10">#}
+{#                <div class="row border-bottom border-light p-2">#}
+{#                    <div class="col-sm-4">#}
+{#                        <span class="text-primary"><b>Group Memberships:</b></span>#}
+{#                    </div>#}
+{#                    <div class="col-sm-8">#}
+{#                        <div class="row">#}
+{#                            {% if groups %}#}
+{#                                {% for group in groups %}#}
+{#                                    <div class="col-sm-12 col-md-8 col-lg-4">{{ group }}</div>#}
+{#                                {% endfor %}#}
+{#                            {% else %}#}
+{#                                <div>no group memberships found</div>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
     {% include 'component/modals.htm' %}
 {% endblock %}

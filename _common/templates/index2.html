@@ -1,9 +1,12 @@
 {% extends "base.htm" %}
 {% load staticfiles %}
 
+{% block local_head %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" integrity="sha256-HtCCUh9Hkh//8U1OwcbD8epVEUdBvuI8wj1KtqMhNkI=" crossorigin="anonymous" />
+{% endblock %}
 
 {% block content %}
-<section>
+<section class="animated fadeIn">
     <header>
         <div class="headline text-center">
             <br/>
@@ -15,7 +18,7 @@
     </header>
 </section>
 
-<section>
+<section class="animated fadeIn">
     <div class="container-fluid">
         <div class="d-flex flex-wrap align-items-center justify-content-center">
 

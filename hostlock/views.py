@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.generic import (View, ListView, DetailView, TemplateView)
 from djangohelpers.views import FilterByQueryParamsMixin
+from rest_framework.authtoken.models import Token
 from itertools import chain
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
@@ -144,8 +145,13 @@ class ApiUserGuide(LoginRequiredMixin, View):
     """ show information/examples on using each available API """
     @staticmethod
     def get(request):
-        template = "help/api_guide.html"
+        print("TEST: ", request.META)
+        # template = "help/api_guide.html"
+        template = "custom/show_api_guide.html"
         context = dict()
+        context['title'] = 'API Guide'
+        context['sub_title'] = "HostLock"
+        context['token'] = str(Token.objects.get_or_create(user=request.user)[0])
         return render(request, template, context=context)
 
 

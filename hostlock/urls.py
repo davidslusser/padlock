@@ -15,10 +15,9 @@ router = DefaultRouter()
 router.register(r'host', apis.HostViewSet, "host")
 router.register(r'lock', apis.LockViewSet, "lock")
 router.register(r'check_lock', apis.CheckLockViewSet, "check_lock")
-router.register(r'release_lock', apis.ReleaseLockViewSet, "release_lock")
+# router.register(r'release_lock', apis.ReleaseLockViewSet, "release_lock")
 router.register(r'grant_lock', apis.GrantLockViewSet, "grant_lock")
 # router.register(r'extend_lock', apis.ExtendLockViewSet, "extend_lock")
-
 
 
 urlpatterns = [
@@ -29,7 +28,7 @@ urlpatterns = [
     # path('api/v1/blah/<str:hostname>/', apis.Blah.as_view()),
     path('api/v1/blah/', apis.Blah.as_view()),
     path('api/v1/extend_lock/', apis.ExtendLockViewSet.as_view()),
-
+    path('api/v1/release_lock/', apis.ReleaseLockViewSet.as_view()),
 
 
     # home page urls
@@ -39,6 +38,7 @@ urlpatterns = [
 
     # custom views
     path('hostlock_dashboard/', views.HostLockDashboard.as_view(), name='hostlock_dashboard'),
+    path('hostlock_api_guide/', views.ApiUserGuide.as_view(), name='hostlock_api_guide'),
 
     # list views
     path('list_locks/', views.ListLocks.as_view(), name='list_locks'),

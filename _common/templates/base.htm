@@ -68,7 +68,9 @@
 
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown active">
+
+                    <!-- hostlock -->
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             HostLock
                         </a>
@@ -81,6 +83,7 @@
                             <a class="dropdown-item" href="">My Team's Hosts</a>
                         </div>
                     </li>
+
                     <!-- apis -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -89,7 +92,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="/hostlock/api/v1/">Developer Tools</a>
                             <a class="dropdown-item" href="/swagger">Documentation <small>(Swagger)</small></a>
-                            <a class="dropdown-item" href="">API Guide</a>
+                            <a class="dropdown-item" href="{% url 'hostlock:hostlock_api_guide' %}">API Guide</a>
                         </div>
                     </li>
 
