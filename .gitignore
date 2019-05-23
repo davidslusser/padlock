@@ -64,9 +64,6 @@ local_test
 local_test/*
 *.iml
 *.pkl
-envs/.env-local-no-container
-envs/.env-local
-skynet/nginx/local.conf
 
 # Apple garbage
 *.DS_Store
