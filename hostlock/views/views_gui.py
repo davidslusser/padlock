@@ -17,7 +17,7 @@ from hostlock.models import (Host, Lock)
 # Create your views here.
 class HostLockIndex(TemplateView):
     """ super simple view for displaying a page with no queried data """
-    template_name = "index2.html"
+    template_name = "padlock_index.html"
 
 
 class HostlockBaseListView(FilterByQueryParamsMixin, ListView):
@@ -56,12 +56,14 @@ class ListMyLocks(LoginRequiredMixin, View):
     @staticmethod
     def get(request):
         template = 'custom/show_my_locks.html'
+        now = timezone.now()
         context = dict()
         context['title'] = "Locks for"
         context['sub_title'] = request.user.username
         context['table'] = "table/table_locks.htm"
-        context['user_locks'] = Lock.objects.filter(requester=request.user, status='granted')\
+        user_locks = Lock.objects.filter(requester=request.user, status='granted') \
             .select_related('requester', 'host', 'host__owner')
+        context['user_locks'] = user_locks
         group_locks = Lock.objects.none()
         for group_name in request.user.groups.all():
             group_locks = group_locks | Lock.objects.filter(requester__groups__name=group_name, status='granted')\
@@ -69,7 +71,8 @@ class ListMyLocks(LoginRequiredMixin, View):
         context['group_locks'] = group_locks.exclude(requester=request.user)
         context['historical_locks'] = Lock.objects.filter(requester=request.user).exclude(status='granted')\
             .select_related('requester', 'host', 'host__owner')
-        context['stale_locks'] = group_locks.exclude()
+        # context['stale_locks'] = group_locks.exclude()
+        context['stale_locks'] = user_locks.filter(expires_at__lt=now) | group_locks.filter(expires_at__lt=now)
 
         return render(request, template, context=context)
 
@@ -136,17 +139,10 @@ class AdminPanel(View):
     pass
 
 
-# class ApiUserGuide(TemplateView):
-#     """ show information/examples on using each available API """
-#     template_name = "help/api_guide.html"
-
-
 class ApiUserGuide(LoginRequiredMixin, View):
     """ show information/examples on using each available API """
     @staticmethod
     def get(request):
-        print("TEST: ", request.META)
-        # template = "help/api_guide.html"
         template = "custom/show_api_guide.html"
         context = dict()
         context['title'] = 'API Guide'
@@ -160,9 +156,12 @@ class HostLockDashboard(LoginRequiredMixin, View):
     # @staticmethod
     def get_24hr_trend_data(self, queryset, timestamp="created_at"):
         """ """
-        print("TEST: getting 24hr data...")
-        last_day_data = queryset.filter(created_at__gte=(timezone.now() - datetime.timedelta(days=1)))
-        print("TEST: ", last_day_data)
+        # print("TEST: getting 24hr data...")
+        if timestamp == "updated_at":
+            last_day_data = queryset.filter(updated_at__gte=(timezone.now() - datetime.timedelta(days=1)))
+        else:
+            last_day_data = queryset.filter(created_at__gte=(timezone.now() - datetime.timedelta(days=1)))
+        # print("TEST: ", last_day_data)
         data = {}
         now = timezone.now()
         # for hour in range(0, 24):
@@ -172,7 +171,7 @@ class HostLockDashboard(LoginRequiredMixin, View):
                 data[date_diff.hour] = last_day_data.filter(updated_at__hour=hour).count()
             else:
                 data[date_diff.hour] = last_day_data.filter(created_at__hour=hour).count()
-        print(data)
+        # print(data)
         return data
 
     # @staticmethod
@@ -195,7 +194,7 @@ class HostLockDashboard(LoginRequiredMixin, View):
             'expired': self.get_24hr_trend_data(all_expired_locks, timestamp="updated_at"),
         }
         context['granted_locks'] = all_granted_locks
-        context['current_locks'] = all_granted_locks.filter(Q(expires_at__gte=now) | Q(expires_at=None)).order_by('-created_at')
-        context['expired_locks'] = all_granted_locks.filter(expires_at__lt=now).order_by('-created_at')
+        context['current_locks'] = all_granted_locks.filter(Q(expires_at__gte=now) | Q(expires_at=None)).order_by('-updated_at')
+        context['expired_locks'] = all_granted_locks.filter(expires_at__lt=now).order_by('-updated_at')
         context['trend_data'] = trend_data
         return render(request, template, context=context)

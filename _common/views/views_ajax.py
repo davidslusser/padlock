@@ -1,3 +1,8 @@
+"""
+Description:
+    django views for serving ajax responses
+"""
+
 # import system modules
 import json
 import datetime
@@ -40,4 +45,3 @@ def release_host_lock(request):
 def get_host_lock_history(request):
     """ """
     pass
-

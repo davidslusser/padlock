@@ -71,7 +71,6 @@ def release_host_lock(request):
     :return:
         JSON formatted response
     """
-    print("TEST: here I am")
     if (request.is_ajax()) and (request.method == 'POST'):
         if 'client_response' in request.POST:
             lock = request.GET['client_response']

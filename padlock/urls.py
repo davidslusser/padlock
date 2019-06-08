@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include
 from django.contrib.auth.views import login, logout_then_login
+from userextensions.urls import *
 from _common import views as common
 from hostlock import views as hostlock
 
@@ -25,14 +26,18 @@ urlpatterns = [
     path('login/', login, {'template_name': 'registration/login.html'}, name="login"),
     path('logout/', logout_then_login, name="logout"),
     path('detail_user/', common.ShowUserProfile.as_view(), name='detail_user'),
+    path('', include('userextensions.urls'), ),
 
     # app urls
+    path('userextensions/', include('userextensions.urls'), ),
     path('hostlock/', include('hostlock.urls'), ),
     path('common/', include('_common.urls'), ),
-    path('', hostlock.HostLockIndex.as_view(), name='index'),
-    path(r'default', hostlock.HostLockIndex.as_view(), name='default'),
-    path(r'home', hostlock.HostLockIndex.as_view(), name='home'),
-    path(r'index', hostlock.HostLockIndex.as_view(), name='index'),
+
+    # home/default/index urls
+    path('', common.PadLockIndex.as_view(), name='index'),
+    path(r'default', common.PadLockIndex.as_view(), name='default'),
+    path(r'home', common.PadLockIndex.as_view(), name='home'),
+    path(r'index', common.PadLockIndex.as_view(), name='index'),
 
     # swagger API docs
     path('swagger', common.schema_view, name="swagger"),

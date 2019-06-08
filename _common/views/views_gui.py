@@ -16,8 +16,7 @@ from braces.views import LoginRequiredMixin, GroupRequiredMixin
 
 
 # import models
-from _common.models import (UserPreferences, UserRecent, UserFavorite)
-
+from userextensions.models import (UserRecent, UserFavorite)
 
 
 class PadlockBaseListView(FilterByQueryParamsMixin, ListView):
@@ -43,6 +42,11 @@ def schema_view(request):
     return response.Response(generator.get_schema(request=request))
 
 
+class PadLockIndex(TemplateView):
+    """ display PadLock default/home/index page """
+    template_name = "padlock_index.html"
+
+
 class ShowUserProfile(LoginRequiredMixin, View):
     """ show user profile """
     @staticmethod
@@ -55,7 +59,7 @@ class ShowUserProfile(LoginRequiredMixin, View):
         return render(request, "detail/detail_current_user.html", context)
 
 
-class ShowAdminPage(View):
+class ShowAdminPage(LoginRequiredMixin, View):
     """ show the admin page """
     @staticmethod
     def get(request):
@@ -100,15 +104,7 @@ class ListFavorites(LoginRequiredMixin, PadlockBaseListView):
         self.queryset = UserFavorite.objects.filter(user=request.user).order_by('-updated_at')
         template = "generic/generic_list.html"
         context['queryset'] = self.filter_by_query_params()
-        context['title'] = "Recents"
+        context['title'] = "Favorites"
         context['sub_title'] = request.user.username
         context['table'] = "table/table_favorites.htm"
         return render(request, template, context=context)
-
-
-class DeleteRecent():
-    pass
-
-
-class DeleteFavorite():
-    pass

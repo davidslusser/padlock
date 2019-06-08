@@ -17,4 +17,5 @@ urlpatterns = [
     # list views
     path('list_recents/', views.ListRecents.as_view(), name='list_recents'),
     path('list_favorites/', views.ListFavorites.as_view(), name='list_favorites'),
+
 ]

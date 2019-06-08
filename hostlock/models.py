@@ -97,8 +97,10 @@ class Lock(PadlockBaseModel):
                 raise ValidationError({'host': 'this host is currently locked'})
                 # raise ValidationError('this host is currently locked')
 
-    def release_lock(self, user, manual=False):
-        """ release the current lock """
+    def get_manageability(self, user):
+        """ determine if user can manage (extend/release/etc.) a lock. All admins can manage all locks.
+        User can manage lock if they are the original requester -or- a member of the group the original requester
+        is in. """
         user_can_manage_lock = False
         if user is self.requester:
             user_can_manage_lock = True
@@ -106,7 +108,20 @@ class Lock(PadlockBaseModel):
             user_can_manage_lock = True
         elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
             user_can_manage_lock = True
-        if not user_can_manage_lock:
+        return user_can_manage_lock
+
+    def release_lock(self, user, manual=False):
+        """ release the current lock """
+        # user_can_manage_lock = False
+        # if user is self.requester:
+        #     user_can_manage_lock = True
+        # elif user.is_superuser:
+        #     user_can_manage_lock = True
+        # elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
+        #     user_can_manage_lock = True
+        # if not user_can_manage_lock:
+        #     return 1
+        if not self.get_manageability(user):
             return 1
         if manual:
             self.status = "manually released"
@@ -128,19 +143,20 @@ class Lock(PadlockBaseModel):
             # print('requester: "{}"'.format(self.requester))
             # print('user: "{}"'.format(user))
             # print(user.username is self.requester.username)
-        user_can_manage_lock = False
-        if user == self.requester:
-            # print('user is requester')
-            user_can_manage_lock = True
-        elif user.is_superuser:
-            # print('user is superuser')
-            user_can_manage_lock = True
-        elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
-            # print('user is in a matching group')
-            user_can_manage_lock = True
-
-        print("TEST: ", user_can_manage_lock)
-        if user_can_manage_lock in [False, None]:
+        # user_can_manage_lock = False
+        # if user == self.requester:
+        #     # print('user is requester')
+        #     user_can_manage_lock = True
+        # elif user.is_superuser:
+        #     # print('user is superuser')
+        #     user_can_manage_lock = True
+        # elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
+        #     # print('user is in a matching group')
+        #     user_can_manage_lock = True
+        #
+        # print("TEST: ", user_can_manage_lock)
+        # if user_can_manage_lock in [False, None]:
+        if not self.get_manageability(user):
             # print('no soup for you!')
             return UserNotAuthorized
 

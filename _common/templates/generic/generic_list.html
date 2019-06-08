@@ -3,10 +3,11 @@
 
 {% block local_head %}
     {% include "component/table_components.htm" %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" integrity="sha256-HtCCUh9Hkh//8U1OwcbD8epVEUdBvuI8wj1KtqMhNkI=" crossorigin="anonymous" />
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid animated fadeIn">
         <h1><span class="text-primary"><b>{{ title }}:</b></span> {% if sub_title %}<span class="text-secondary"><small><small>{{ sub_title }}</small></small></span>{% endif %}</h1>
 
         {% include table %}

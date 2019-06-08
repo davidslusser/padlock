@@ -50,11 +50,11 @@
 
             if(method === 'POST'){
                 document.getElementById("id_modalConfirm_OK").onclick = function(){doPost(url);};
-                $("#id_modalConfirm_OK").attr('class', 'btn btn-primary');
+                $("#id_modalConfirm_OK").attr('class', 'btn btn-primary text-light');
                 $("#id_modalConfirm").modal({show:true});
             } else {
                 $("#id_modalConfirm_OK").attr('href', url);
-                $("#id_modalConfirm_OK").attr('class', 'btn btn-primary');
+                $("#id_modalConfirm_OK").attr('class', 'btn btn-primary text-light');
                 $("#id_modalConfirm").modal({show:true});
             }
             showModal('id_modalConfirm');
@@ -220,7 +220,7 @@
             </div>
             <div class="modal-body" id="id_modalResultsBody"></div>
             <div class="modal-footer">
-                <button id="id_modalResultsClose" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button id="id_modalResultsClose" type="button" class="btn btn-primary text-light" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -238,8 +238,8 @@
                 </div>
                 <div class="modal-body" id="id_modalConfirmBody"></div>
                 <div class="modal-footer" id="id_modalConfirmFooter">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                    <a class="btn btn-primary" id="id_modalConfirm_OK"></a>
+                    <button class="btn btn-light" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <a class="btn btn-primary text-light" id="id_modalConfirm_OK"></a>
                 </div>
             </div>
         </div>
@@ -259,7 +259,7 @@
                 <div class="modal-body-scroll" id="id_modalResultsLargeBody"></div>
             </div>
             <div class="modal-footer">
-                <button id="id_modalResultsLargeOk" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button id="id_modalResultsLargeOk" type="button" class="btn btn-primary text-light" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -278,7 +278,7 @@
                 <div class="modal-body-scroll" id="id_modalResultsExtraLargeBody"></div>
             </div>
             <div class="modal-footer">
-                <button id="id_modalResultsExtraLargeOk" type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button id="id_modalResultsExtraLargeOk" type="button" class="btn btn-primary text-light" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -296,8 +296,8 @@
                 </div>
                 <div class="modal-body" id="id_modalConfirmLargeBody"></div>
                 <div class="modal-footer" id="id_modalConfirmLargeFooter">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                    <a class="btn btn-primary" id="id_modalConfirmLarge_OK"></a>
+                    <button class="btn btn-light" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                    <a class="btn btn-primary text-light" id="id_modalConfirmLarge_OK"></a>
                 </div>
             </div>
         </div>

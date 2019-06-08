@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid animated fadeIn">
         <h1 class="text-primary"><b>{{ title }}:</b> {% if sub_title %}<small><small><span class="text-secondary">{{ sub_title }}</span></small></small>{% endif %}</h1>
     </div>
 
     <!-- summary row -->
-    <section>
+    <section class="animated fadeIn">
         <div class="flex-container" style="margin: 5%;">
             <div class="summary-container-wrap text-center">
 
@@ -35,7 +35,7 @@
                     <div class="card mb-4 text-center hvr-grow">
                         <div class="card-body bg-light">
                             <h2 class="card-title text-primary"><i class="fas fa-exclamation-triangle"></i></h2>
-                            <h3 class="card-title text-primary">Stale Locks <small>({{historical_locks.count}})</small></h3>
+                            <h3 class="card-title text-primary">Stale Locks <small>({{stale_locks.count}})</small></h3>
                             <p class="card-text">Locks that remain granted past their expiration time</p>
                         </div>
                     </div>
@@ -56,63 +56,63 @@
     <!-- detail row -->
 
     <!-- navtab controls -->
-    <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-summary-tab" data-toggle="tab" href="#id_tab_summary" role="tab" aria-controls="nav-summary" aria-selected="true">Summary</a>
-            <a class="nav-item nav-link" id="nav-user-tab" data-toggle="tab" href="#id_tab_user_granted" role="tab" aria-controls="nav-user" aria-selected="false">User Granted</a>
-            <a class="nav-item nav-link" id="nav-team-tab" data-toggle="tab" href="#id_tab_team_granted" role="tab" aria-controls="nav-team" aria-selected="false">Team Granted</a>
-            <a class="nav-item nav-link" id="nav-stale-tab" data-toggle="tab" href="#id_tab_stale" role="tab" aria-controls="nav-team" aria-selected="false">Stale Locks</a>
-            <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#id_tab_history" role="tab" aria-controls="nav-history" aria-selected="false">My Lock History</a>
-        </div>
-    </nav>
+    <section class="animated fadeIn" style="animation-delay: .25s;">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-summary-tab" data-toggle="tab" href="#id_tab_summary" role="tab" aria-controls="nav-summary" aria-selected="true">Summary</a>
+                <a class="nav-item nav-link" id="nav-user-tab" data-toggle="tab" href="#id_tab_user_granted" role="tab" aria-controls="nav-user" aria-selected="false">User Granted</a>
+                <a class="nav-item nav-link" id="nav-team-tab" data-toggle="tab" href="#id_tab_team_granted" role="tab" aria-controls="nav-team" aria-selected="false">Team Granted</a>
+                <a class="nav-item nav-link" id="nav-stale-tab" data-toggle="tab" href="#id_tab_stale" role="tab" aria-controls="nav-team" aria-selected="false">Stale Locks</a>
+                <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#id_tab_history" role="tab" aria-controls="nav-history" aria-selected="false">My Lock History</a>
+            </div>
+        </nav>
 
-    <!-- navtab content -->
-    <div class="tab-content p-4" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="id_tab_summary" role="tabpanel" aria-labelledby="nav-summary-tab">
-            <div class="container-fluid">
-                <br/>
-                Summary
+        <!-- navtab content -->
+        <div class="tab-content p-4" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="id_tab_summary" role="tabpanel" aria-labelledby="nav-summary-tab">
+                <div class="container-fluid">
+                    <br/>
+                    Summary
+                </div>
+            </div>
+
+            <!-- navtab for locks granted by user -->
+            <div class="tab-pane fade" id="id_tab_user_granted" role="tabpanel" aria-labelledby="nav-user-tab">
+                <div class="container-fluid">
+                    {% with user_locks as queryset %}
+                        {% include table %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- navtab for locks granted by users teammates -->
+            <div class="tab-pane fade" id="id_tab_team_granted" role="tabpanel" aria-labelledby="nav-team-tab">
+                <div class="container-fluid">
+                    {% with group_locks as queryset %}
+                        {% include table %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- navtab for stale locks-->
+            <div class="tab-pane fade" id="id_tab_stale" role="tabpanel" aria-labelledby="nav-team-tab">
+                <div class="container-fluid">
+                    {% with stale_locks as queryset %}
+                        {% include table %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <!-- navtab for lock history -->
+            <div class="tab-pane fade" id="id_tab_history" role="tabpanel" aria-labelledby="nav-history-tab">
+                <div class="container-fluid">
+                    {% with historical_locks as queryset %}
+                        {% include table %}
+                    {% endwith %}
+                </div>
             </div>
         </div>
-
-        <!-- navtab for locks granted by user -->
-        <div class="tab-pane fade" id="id_tab_user_granted" role="tabpanel" aria-labelledby="nav-user-tab">
-            <div class="container-fluid">
-                {% with user_locks as queryset %}
-                    {% include table %}
-                {% endwith %}
-            </div>
-        </div>
-
-        <!-- navtab for locks granted by users teammates -->
-        <div class="tab-pane fade" id="id_tab_team_granted" role="tabpanel" aria-labelledby="nav-team-tab">
-            <div class="container-fluid">
-                {% with group_locks as queryset %}
-                    {% include table %}
-                {% endwith %}
-            </div>
-        </div>
-
-        <!-- navtab for stale locks-->
-        <div class="tab-pane fade" id="id_tab_stale" role="tabpanel" aria-labelledby="nav-team-tab">
-            <div class="container-fluid">
-                {% with group_locks as queryset %}
-                    {% include table %}
-                {% endwith %}
-            </div>
-        </div>
-
-        <!-- navtab for lock history -->
-        <div class="tab-pane fade" id="id_tab_history" role="tabpanel" aria-labelledby="nav-history-tab">
-            <div class="container-fluid">
-                {% with historical_locks as queryset %}
-                    {% include table %}
-                {% endwith %}
-            </div>
-        </div>
-
-    </div>
-
+    </section>
 
 
 {% endblock %}

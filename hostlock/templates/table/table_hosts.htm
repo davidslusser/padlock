@@ -17,9 +17,9 @@
             <td>{{ row.owner }}</td>
             <td>
                 {% if row.is_locked %}
-                <span class="badge-pill badge-primary"><i class="fa fa-check fa-fw"></i></span>
+                <span class="text-primary"><i class="fa fa-check fa-fw"></i></span>
                 {% else %}
-                <span class="badge-pill badge-danger"><i class="fa fa-times fa-fw"></i></span>
+                <span class="text-danger"><i class="fa fa-times fa-fw"></i></span>
                 {% endif %}
             </td>
             <td>{{ row.lock_set.count }}</td>

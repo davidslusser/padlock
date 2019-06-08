@@ -24,11 +24,13 @@
             <!-- actions -->
             <td>
                 <!-- manually unlock host -->
+                {% if row.status == 'granted' or row.status == 'expired' %}
                 <a href="#" class="table-action-icon" title="unlock host"
                    onClick="confirmAction('{% url 'hostlock:release_host_lock' %}?id={{ row.id }}', 'Unlock Host', 'This will release the current lock on <b><i>{{ row.host }}</i></b>. Do you wish to continue?', 'Continue', 'POST');"
                    role="button" data-toggle="tooltip" data-placement="left">
                     <i class="fa fa-lock-open"></i>
                 </a>
+                {% endif %}
 
 {#                <!-- extend lock -->#}
 {#                <a href="#" class="table-action-icon" title="extend lock time"#}
