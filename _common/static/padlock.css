@@ -1,3 +1,5 @@
+/* custom Bootstrap formatting */
+
 .margin-right-20 {
     margin-right: 20px !important;
 }
@@ -21,6 +23,7 @@
     padding-left: 3px;
     padding-right: 3px;
 }
+
 
 th {
     background-color: var(--primary);

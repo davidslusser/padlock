@@ -52,6 +52,12 @@ class UserRecentsMiddleware(MiddlewareMixin):
         #     p.save()
 
         # todo: validate that url is valid; exit out if not
+        from urllib.parse import urlparse
+        print("yo!")
+        print(path)
+        print(urlparse(path).path)
+
+
         recent, is_new = UserRecent.objects.get_or_create(url=request.get_full_path(),
                                                           user=request.user,
                                                           defaults=dict(url=request.get_full_path(),

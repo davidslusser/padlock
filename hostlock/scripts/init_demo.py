@@ -9,6 +9,10 @@ from django.core.exceptions import ValidationError
 
 # setup django
 sys.path.append(os.environ['HOME'] + '/code/padlock')
+# this_file_dir = os.path.dirname(os.path.abspath(__file__))
+# settings_dir = os.path.dirname(this_file_dir)
+# sys.path.append(settings_dir)
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "padlock.settings")
 django.setup()
 from rest_framework.authtoken.models import Token

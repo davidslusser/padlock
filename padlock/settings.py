@@ -17,7 +17,6 @@ import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = str(environ.Path(__file__) - 2)
-print("TEST: ", BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework_filters',
     'djangohelpers',
     'debug_toolbar',
+    'userextensions',
 
     # padlock apps
     '_common',
@@ -68,7 +68,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'padlock.middleware.userpreferences.UserRecentsMiddleware',
+    # 'padlock.middleware.userpreferences.UserRecentsMiddleware',
+    'userextensions.middleware.UserRecentsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'padlock.urls'

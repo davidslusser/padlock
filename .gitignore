@@ -47,8 +47,7 @@ coverage.xml
 
 # Django stuff:
 *.log
-django_project/staticroot/*
-django_project/static/*
+staticroot
 db.sqlite3
 
 # Sphinx documentation
@@ -61,7 +60,6 @@ target/
 *.idea
 local_settings.ini
 local_test
-local_test/*
 *.iml
 *.pkl
 

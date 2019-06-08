@@ -14,10 +14,13 @@
         <tr>
             <td>{{ row.name }}</td>
             <td>{{ row.url }}</td>
-            <td>{{ row.created_at }}</td>
+            <td>{{ row.updated_at }}</td>
 
             <!-- actions -->
             <td>
+                <a href="#" onClick="confirmAction('{% url "userextensions:delete_favorite" row.pk %}', 'Delete Favorite', 'This favorite will be permanently removed from your list of favorites; do you wish to continue?', 'Continue', 'POST');">
+                    <i class="fas fa-trash mr-3"></i>
+                </a>
             </td>
         </tr>
     {% endfor %}
