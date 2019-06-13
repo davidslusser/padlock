@@ -6,8 +6,8 @@ About
 PadLock is your centralized lock store for hosts and more.
 
 
-Contents
-^^^^^^^^
+Table of Contents
+=================
 
 .. toctree::
    :maxdepth: 2
