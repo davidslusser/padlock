@@ -128,26 +128,17 @@ class Lock(PadlockBaseModel):
             return UserNotAuthorized
 
         # do not allow extend if no expires_at is set
-        # try:
         if not self.expires_at or self.no_expire:
             print("can't extent this one!")
-            return LockExpireMissing
-        # except LockCanNotBeExtended:
-        #     print("BLAH")
+            raise LockExpireMissing('the lock on {} does not have an expiration and thus can not be extended'
+                                    .format(self.host))
 
         # do not allow extend if maximum extends have been reached
         max_extend = 3
         if self.extend_count >= max_extend:
-            print('max extends reached!')
-            # return "balh"
-            # return MaxLockExtensionReached
-            raise MaxLockExtensionReached('{} has been extended {} times and can not be extended further'.format(
-                self.host, self.extend_count))
-            # raise MaxLockExtensionReached(None )
-            # raise ValidationError({'host': 'this host can not be extended further'})
+            raise MaxLockExtensionReached('the lock on {} has been extended {} times and can not be extended further'
+                                          .format(self.host, self.extend_count))
 
-            # return 0
-        print('extending the lock...')
         minutes = int(minutes)
         new_expire = self.expires_at + timedelta(minutes=minutes)
         extend_count = self.extend_count + 1

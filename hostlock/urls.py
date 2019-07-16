@@ -14,7 +14,7 @@ router = DefaultRouter()
 # hostlock API Endpoints
 router.register(r'host', api.HostViewSet, "host")
 router.register(r'lock', api.LockViewSet, "lock")
-router.register(r'check_lock', api.CheckLockViewSet, "check_lock")
+# router.register(r'check_lock', api.CheckLockViewSet, "check_lock")
 router.register(r'grant_lock', api.GrantLockViewSet, "grant_lock")
 
 
@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('api/v1/extend_lock/', api.ExtendLockViewSet.as_view()),
     path('api/v1/release_lock/', api.ReleaseLockViewSet.as_view()),
+    path('api/v1/check_lock/', api.CheckLockViewSet.as_view()),
 
 
     # home page urls

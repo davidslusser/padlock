@@ -126,7 +126,7 @@ class ReleaseLockViewSet(APIView):
             return Response({'messages': err}, status.HTTP_400_BAD_REQUEST)
 
 
-class CheckLockViewSet(viewsets.ViewSet):
+class CheckLockViewSet(APIView):
     """
     Description:
         Check if a given host is currently locked; return lock details if locked, or appropriate message if not
@@ -138,10 +138,11 @@ class CheckLockViewSet(viewsets.ViewSet):
         curl -X GET http://127.0.0.1:8787/hostlock/api/v1/check_lock/host1/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded'
     """
     @staticmethod
-    def retrieve(request, pk=None):
+    def get(request):
         """ API entry point; viewset expects a pk value; we use this as the hostname (str) """
         try:
-            hostname = pk
+            data = json.loads(request.body)
+            hostname = data.get('hostname')
 
             # check if a host exists; return appropriate message if not
             host = Host.objects.get_object_or_none(hostname=hostname)
@@ -173,11 +174,9 @@ class ExtendLockViewSet(APIView):
         curl -X PUT http://127.0.0.1:8787/hostlock/api/v1/extend_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H 'Content-Type: application/x-www-form-urlencoded' -d '{"hostname":"host5", "minutes":"4"}'
 
     """
-    serializer_class = LockSerializer
-
-    def put(self, request):
+    @staticmethod
+    def put(request):
         """ API entry point; viewset expects a pk value; we use this as the hostname (str) """
-        # hostname = pk
         data = json.loads(request.body)
         hostname = data.get('hostname')
         minutes = data.get('minutes')
@@ -197,6 +196,7 @@ class ExtendLockViewSet(APIView):
         # attempt to extend the lock; return appropriate response
         try:
             lock.extend_lock(request.user, minutes)
-            return Response(self.serializer_class.data)
+            lock_serializer = LockSerializer(lock)
+            return Response(lock_serializer.data)
         except Exception as err:
             return Response({'messages': err}, status.HTTP_400_BAD_REQUEST)
