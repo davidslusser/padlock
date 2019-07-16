@@ -23,9 +23,6 @@ class LockSerializer(serializers.ModelSerializer):
 
 
 class ExtendLockSerializer(serializers.Serializer):
-    # id = serializers.IntegerField(read_only=True)
-    # name = serializers.CharField(max_length=256)
-    # owner = serializers.CharField(max_length=256)
     message = serializers.CharField(max_length=256)
 
     def update(self, instance, validated_data):

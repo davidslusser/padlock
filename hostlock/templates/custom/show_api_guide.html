@@ -90,7 +90,7 @@
                         <div class="row">&nbsp;</div>
                         <div class="row m-2 boarder border-bottom boarder-secondary">
                             <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Example Call: </b></div>
-                            <div class="col-sm-9 col-md-10 col-lg-10">curl -X POST http://{{ request.META.HTTP_HOST }}/hostlock/api/v1/release_lock/ -H 'Authorization: Token {{ token }}' -d '{"hostname":"host4"}'</div>
+                            <div class="col-sm-9 col-md-10 col-lg-10">curl -X PUT http://{{ request.META.HTTP_HOST }}/hostlock/api/v1/release_lock/ -H 'Authorization: Token {{ token }}' -d '{"hostname":"host4"}'</div>
                         </div>
                         <div class="row">&nbsp;</div>
                         <div class="row m-2">

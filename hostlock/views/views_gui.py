@@ -71,7 +71,6 @@ class ListMyLocks(LoginRequiredMixin, View):
         context['group_locks'] = group_locks.exclude(requester=request.user)
         context['historical_locks'] = Lock.objects.filter(requester=request.user).exclude(status='granted')\
             .select_related('requester', 'host', 'host__owner')
-        # context['stale_locks'] = group_locks.exclude()
         context['stale_locks'] = user_locks.filter(expires_at__lt=now) | group_locks.filter(expires_at__lt=now)
 
         return render(request, template, context=context)
@@ -153,28 +152,22 @@ class ApiUserGuide(LoginRequiredMixin, View):
 
 class HostLockDashboard(LoginRequiredMixin, View):
     """ show a consolidated view containing summarized information regarding host locks """
-    # @staticmethod
     def get_24hr_trend_data(self, queryset, timestamp="created_at"):
         """ """
-        # print("TEST: getting 24hr data...")
         if timestamp == "updated_at":
             last_day_data = queryset.filter(updated_at__gte=(timezone.now() - datetime.timedelta(days=1)))
         else:
             last_day_data = queryset.filter(created_at__gte=(timezone.now() - datetime.timedelta(days=1)))
-        # print("TEST: ", last_day_data)
         data = {}
         now = timezone.now()
-        # for hour in range(0, 24):
         for hour in [(now - datetime.timedelta(hours=i)).hour for i in range(0, 24)]:
             date_diff = now - datetime.timedelta(hours=hour)
             if timestamp == "updated_at":
                 data[date_diff.hour] = last_day_data.filter(updated_at__hour=hour).count()
             else:
                 data[date_diff.hour] = last_day_data.filter(created_at__hour=hour).count()
-        # print(data)
         return data
 
-    # @staticmethod
     def get(self, request):
         template = 'custom/show_hostlock_dashboard.html'
         context = dict()
