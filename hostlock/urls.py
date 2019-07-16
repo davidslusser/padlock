@@ -14,7 +14,6 @@ router = DefaultRouter()
 # hostlock API Endpoints
 router.register(r'host', api.HostViewSet, "host")
 router.register(r'lock', api.LockViewSet, "lock")
-# router.register(r'check_lock', api.CheckLockViewSet, "check_lock")
 router.register(r'grant_lock', api.GrantLockViewSet, "grant_lock")
 
 

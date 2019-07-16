@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from hostlock.models import (Host, Lock)
 
 # import serializers
-from hostlock.serializers import (HostSerializer, LockSerializer, ExtendLockSerializer)
+from hostlock.serializers import (HostSerializer, LockSerializer)
 
 
 class HostViewSet(viewsets.ModelViewSet):

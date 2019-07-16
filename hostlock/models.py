@@ -89,7 +89,6 @@ class Lock(PadlockBaseModel):
                 Lock.objects.filter(pk=existing_lock.pk).update(status="expired")
             else:
                 raise ValidationError({'host': 'this host is currently locked'})
-                # raise ValidationError('this host is currently locked')
 
     def get_manageability(self, user):
         """ determine if user can manage (extend/release/etc.) a lock. All admins can manage all locks.
@@ -129,7 +128,6 @@ class Lock(PadlockBaseModel):
 
         # do not allow extend if no expires_at is set
         if not self.expires_at or self.no_expire:
-            print("can't extent this one!")
             raise LockExpireMissing('the lock on {} does not have an expiration and thus can not be extended'
                                     .format(self.host))
 
