@@ -54,7 +54,7 @@
                         <div class="row m-2">
                             <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Example Responses: </b></div>
                             <div class="col-sm-9 col-md-10 col-lg-10">
-                                <span class="text-primary">{"id":69,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host5","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>
+                                <span class="text-primary">{"id":8,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host4","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>
                                 <br/>
                                 <span class="text-danger">{"host":["this host is currently locked"]}</span><br/>
                             </div>
@@ -128,10 +128,6 @@
                             <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Required Fields: </b></div>
                             <div class="col-sm-9 col-md-10 col-lg-10">hostname <small>(char)</small>, minutes <small>(int)</small></div>
                         </div>
-{#                        <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                            <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Optional Fields: </b></div>#}
-{#                            <div class="col-sm-9 col-md-10 col-lg-10">purpose <small>(char)</small>, request_details <small>(text)</small>, notes <small>(text)</small>, no_expire <small>(bool)</small></div>#}
-{#                        </div>#}
                         <div class="row">&nbsp;</div>
                         <div class="row m-2 boarder border-bottom boarder-secondary">
                             <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Example Call: </b></div>
@@ -159,180 +155,35 @@
                 </div>
                 <div id="check" class="collapse" data-parent="#accordion">
                     <div class="card-body">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        <div class="row m-2 boarder border-bottom boarder-secondary">
+                            <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Description: </b></div>
+                            <div class="col-sm-9 col-md-10 col-lg-10">This API returns details of an existing lock.</div>
+                        </div>
+                        <div class="row">&nbsp;</div>
+                        <div class="row m-2 boarder border-bottom boarder-secondary">
+                            <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Method(s): </b></div>
+                            <div class="col-sm-9 col-md-10 col-lg-10">GET</div>
+                        </div>
+                        <div class="row">&nbsp;</div>
+                        <div class="row m-2 boarder border-bottom boarder-secondary">
+                            <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Example Call: </b></div>
+                            <div class="col-sm-9 col-md-10 col-lg-10">curl -X GET http://{{ request.META.HTTP_HOST }}/hostlock/api/v1/check_lock/host4/ -H 'Authorization: Token {{ token }}' -H 'Content-Type: application/x-www-form-urlencoded'</div>
+                        </div>
+                        <div class="row">&nbsp;</div>
+                        <div class="row m-2">
+                            <div class="col-sm-3 col-md-2 col-lg-2 text-primary"><b>Example Responses: </b></div>
+                            <div class="col-sm-9 col-md-10 col-lg-10">
+                                <span class="text-primary">{"id":8,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host4","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>
+                                <br/>
+                                <span class="text-danger">{"message": "host1 was not found"}</span><br/>
+                                <span class="text-danger">{"message": "host4 is not currently locked"}</span><br/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
-
-
-
-
-
-{#        <!-- grant API -->#}
-{#        <div class="card border border-primary mb-4">#}
-{#            <h4 class="card-header bg-primary text-white text-left">Grant Lock</h4>#}
-{#            <div class="card-body bg-light">#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Description: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">This API is used to grand a lock on a provided host.#}
-{#                        If Granted, a JSON response containing lock data will be returned. Else, a JSON response#}
-{#                        containing appropriate error(s)/message(s) will be returned.#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Method(s): </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">POST</div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Required Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">hostname <small>(char)</small></div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Optional Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">purpose <small>(char)</small>, request_details <small>(text)</small>, notes <small>(text)</small>, no_expire <small>(bool)</small></div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Call: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'</div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Responses: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">#}
-{#                        <span class="text-primary">{"id":69,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host5","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>#}
-{#                        <br/>#}
-{#                        <span class="text-danger">{"host":["this host is currently locked"]}</span><br/>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <!-- release API -->#}
-{#        <div class="card border border-primary mb-4">#}
-{#            <h4 class="card-header bg-primary text-white text-left">Grant Lock</h4>#}
-{#            <div class="card-body bg-light">#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Description: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">This API is used to grand a lock on a provided host.#}
-{#                        If Granted, a JSON response containing lock data will be returned. Else, a JSON response#}
-{#                        containing appropriate error(s)/message(s) will be returned.#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Method(s): </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">POST</div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Required Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">hostname <small>(char)</small></div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Optional Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">purpose <small>(char)</small>, request_details <small>(text)</small>, notes <small>(text)</small>, no_expire <small>(bool)</small></div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Call: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'</div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Responses: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">#}
-{#                        <span class="text-primary">{"id":69,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host5","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>#}
-{#                        <br/>#}
-{#                        <span class="text-danger">{"host":["this host is currently locked"]}</span><br/>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <!-- check API -->#}
-{#        <div class="card border border-primary mb-4">#}
-{#            <h4 class="card-header bg-primary text-white text-left">Grant Lock</h4>#}
-{#            <div class="card-body bg-light">#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Description: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">This API is used to grand a lock on a provided host.#}
-{#                        If Granted, a JSON response containing lock data will be returned. Else, a JSON response#}
-{#                        containing appropriate error(s)/message(s) will be returned.#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Method(s): </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">POST</div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Required Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">hostname <small>(char)</small></div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Optional Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">purpose <small>(char)</small>, request_details <small>(text)</small>, notes <small>(text)</small>, no_expire <small>(bool)</small></div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Call: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'</div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Responses: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">#}
-{#                        <span class="text-primary">{"id":69,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host5","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>#}
-{#                        <br/>#}
-{#                        <span class="text-danger">{"host":["this host is currently locked"]}</span><br/>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{##}
-{#        <!-- extend API -->#}
-{#        <div class="card border border-primary mb-4">#}
-{#            <h4 class="card-header bg-primary text-white text-left">Grant Lock</h4>#}
-{#            <div class="card-body bg-light">#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Description: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">This API is used to grand a lock on a provided host.#}
-{#                        If Granted, a JSON response containing lock data will be returned. Else, a JSON response#}
-{#                        containing appropriate error(s)/message(s) will be returned.#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Method(s): </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">POST</div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Required Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">hostname <small>(char)</small></div>#}
-{#                </div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Optional Fields: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">purpose <small>(char)</small>, request_details <small>(text)</small>, notes <small>(text)</small>, no_expire <small>(bool)</small></div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Call: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">curl -X POST http://127.0.0.1:8787/hostlock/api/v1/grant_lock/ -H 'Authorization: Token 98d8b8302d93b82edbfb329697c84a25445db3a5' -H rlencoded -d '{"hostname":"host4", "purpose":"test"}'</div>#}
-{#                </div>#}
-{#                <div class="row">&nbsp;</div>#}
-{#                <div class="row m-2 boarder border-bottom boarder-secondary">#}
-{#                    <div class="col-sm-3 col-md-2 col-lg-2"><b>Example Responses: </b></div>#}
-{#                    <div class="col-sm-9 col-md-10 col-lg-10">#}
-{#                        <span class="text-primary">{"id":69,"created_at":"2019-05-19T21:39:40.918408Z","updated_at":"2019-05-19T21:39:40.918452Z","host":"host5","requester":"david","source":null,"request_details":null,"purpose":"test","notes":null,"expires_at":"2019-05-19T21:54:40.875809Z","status":"granted"}</span><br/>#}
-{#                        <br/>#}
-{#                        <span class="text-danger">{"host":["this host is currently locked"]}</span><br/>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
 
     </div>
 </section>
