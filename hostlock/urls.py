@@ -15,9 +15,7 @@ router = DefaultRouter()
 router.register(r'host', api.HostViewSet, "host")
 router.register(r'lock', api.LockViewSet, "lock")
 router.register(r'check_lock', api.CheckLockViewSet, "check_lock")
-# router.register(r'release_lock', api.ReleaseLockViewSet, "release_lock")
 router.register(r'grant_lock', api.GrantLockViewSet, "grant_lock")
-# router.register(r'extend_lock', api.ExtendLockViewSet, "extend_lock")
 
 
 urlpatterns = [
@@ -25,8 +23,6 @@ urlpatterns = [
     # API views
     path('api/', include(router.urls)),
     path('api/v1/', include(router.urls)),
-    # path('api/v1/blah/<str:hostname>/', apis.Blah.as_view()),
-    path('api/v1/blah/', api.Blah.as_view()),
     path('api/v1/extend_lock/', api.ExtendLockViewSet.as_view()),
     path('api/v1/release_lock/', api.ReleaseLockViewSet.as_view()),
 
@@ -51,5 +47,5 @@ urlpatterns = [
     # ajax views
     path('get_lock_auditlog', ajax.get_lock_auditlog, name='get_lock_auditlog'),
     path('get_host_auditlog', ajax.get_host_auditlog, name='get_host_auditlog'),
-    # path('release_host_lock', ajax.release_host_lock, name='release_host_lock'),
+
 ]

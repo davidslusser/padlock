@@ -75,8 +75,6 @@ class Lock(PadlockBaseModel):
 
     def clean(self):
         # set the expiration default (for a new lock) if None
-        # if not self.pk and not self.expiration:
-        #     self.expiration = 900
         if not self.expires_at and not self.no_expire:
             self.expires_at = timezone.now() + timedelta(minutes=15)
 
@@ -85,10 +83,6 @@ class Lock(PadlockBaseModel):
 
         if not self.pk and existing_lock:
             # check if lock is expired; set as expired and create new if expired, else reject grant
-            # if existing_lock.expiration in [None, 0]:
-            #     raise ValidationError({'host': 'this host is currently locked'})
-            # elif (timezone.now() - existing_lock.created_at).seconds > existing_lock.expiration:
-            #     Lock.objects.filter(pk=existing_lock.pk).update(status="expired")
             if not self.expires_at:
                 raise ValidationError({'host': 'this host is currently locked'})
             elif timezone.now() > existing_lock.expires_at:
@@ -112,15 +106,6 @@ class Lock(PadlockBaseModel):
 
     def release_lock(self, user, manual=False):
         """ release the current lock """
-        # user_can_manage_lock = False
-        # if user is self.requester:
-        #     user_can_manage_lock = True
-        # elif user.is_superuser:
-        #     user_can_manage_lock = True
-        # elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
-        #     user_can_manage_lock = True
-        # if not user_can_manage_lock:
-        #     return 1
         if not self.get_manageability(user):
             return 1
         if manual:
@@ -139,25 +124,7 @@ class Lock(PadlockBaseModel):
             0 if successful
             1 if error encountered
         """
-        # try:
-            # print('requester: "{}"'.format(self.requester))
-            # print('user: "{}"'.format(user))
-            # print(user.username is self.requester.username)
-        # user_can_manage_lock = False
-        # if user == self.requester:
-        #     # print('user is requester')
-        #     user_can_manage_lock = True
-        # elif user.is_superuser:
-        #     # print('user is superuser')
-        #     user_can_manage_lock = True
-        # elif user.groups.filter(name=getattr(self.host.owner, 'name', None)):
-        #     # print('user is in a matching group')
-        #     user_can_manage_lock = True
-        #
-        # print("TEST: ", user_can_manage_lock)
-        # if user_can_manage_lock in [False, None]:
         if not self.get_manageability(user):
-            # print('no soup for you!')
             return UserNotAuthorized
 
         # do not allow extend if no expires_at is set
@@ -186,10 +153,6 @@ class Lock(PadlockBaseModel):
         extend_count = self.extend_count + 1
         Lock.objects.filter(pk=self.pk).update(expires_at=new_expire, extend_count=extend_count)
         return 0
-        # except Exception as err:
-        #     logging.error(err)
-        #     print("OOPS: ", err)
-        #     return 1
 
     def save(self, *args, **kwargs):
         self.full_clean()
