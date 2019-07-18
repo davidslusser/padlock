@@ -26,7 +26,6 @@ urlpatterns = [
     path('login/', login, {'template_name': 'registration/login.html'}, name="login"),
     path('logout/', logout_then_login, name="logout"),
     path('detail_user/', common.ShowUserProfile.as_view(), name='detail_user'),
-    path('', include('userextensions.urls'), ),
 
     # app urls
     path('userextensions/', include('userextensions.urls'), ),

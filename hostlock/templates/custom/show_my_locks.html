@@ -71,8 +71,40 @@
         <div class="tab-content p-4" id="nav-tabContent">
             <div class="tab-pane fade show active" id="id_tab_summary" role="tabpanel" aria-labelledby="nav-summary-tab">
                 <div class="container-fluid">
-                    <br/>
-                    Summary
+                    <h3 class="mb-5">Summary</h3>
+                    <div class="row">
+                        <!-- Locks -->
+                        <div class="col-4">
+                            <h5 class="mb-3">Locks</h5>
+                            <div class="ml-3">
+                                <div class="row mb-2 border-bottom border-light">
+                                    <div class="col-4 text-primary font-weight-bold">Self Granted:</div>
+                                    <div class="col-8">{{user_locks.count}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 mb-2 text-primary font-weight-bold">Team Granted:</div>
+                                    <div class="col-8">{{group_locks.count}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 mb-2 text-primary font-weight-bold">Expired:</div>
+                                    <div class="col-8">{{stale_locks.count}}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4 mb-2 text-primary font-weight-bold">Historical:</div>
+                                    <div class="col-8">{{historical_locks.count}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- space -->
+                        <div class="col-2">&nbsp;</div>
+                        <!-- Hosts -->
+                        <div class="col-4">
+                            <h5 class="mb-2">Hosts</h5>
+                            {# loop through and display hosts per group #}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
