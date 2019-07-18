@@ -9,7 +9,7 @@ app_name = "_common"
 urlpatterns = [
 
     # action views
-    path('update_token/', views.UpdateApiToken.as_view(), name='update_token'),
+    # path('update_token/', views.UpdateApiToken.as_view(), name='update_token'),
 
     # custom views
     path('show_admin/', views.ShowAdminPage.as_view(), name='show_admin'),

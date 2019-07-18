@@ -67,18 +67,18 @@ class ShowAdminPage(LoginRequiredMixin, View):
         return render(request, "custom/padlock_admin.html", context)
 
 
-class UpdateApiToken(LoginRequiredMixin, View):
-    """ delete current user token and create a new one """
-    def post(self, request):
-        redirect_url = self.request.META.get('HTTP_REFERER')
-        try:
-            token = Token.objects.get(user=request.user)
-            token.delete()
-            Token.objects.get_or_create(user=request.user)
-        except Exception as err:
-            messages.add_message(request, messages.ERROR, "Could not complete requested action",
-                                 extra_tags='alert-danger')
-        return redirect(redirect_url)
+# class UpdateApiToken(LoginRequiredMixin, View):
+#     """ delete current user token and create a new one """
+#     def post(self, request):
+#         redirect_url = self.request.META.get('HTTP_REFERER')
+#         try:
+#             token = Token.objects.get(user=request.user)
+#             token.delete()
+#             Token.objects.get_or_create(user=request.user)
+#         except Exception as err:
+#             messages.add_message(request, messages.ERROR, "Could not complete requested action",
+#                                  extra_tags='alert-danger')
+#         return redirect(redirect_url)
 
 
 class CreateServiceAccount():
