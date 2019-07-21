@@ -150,9 +150,9 @@ class Lock(PadlockBaseModel):
                                           .format(self.host, self.extend_count))
 
         minutes = int(minutes)
-        new_expire = self.expires_at + timedelta(minutes=minutes)
-        extend_count = self.extend_count + 1
-        Lock.objects.filter(pk=self.pk).update(expires_at=new_expire, extend_count=extend_count)
+        self.expires_at += timedelta(minutes=minutes)
+        self.extend_count = self.extend_count + 1
+        self.save()
         return 0
 
     def save(self, *args, **kwargs):
