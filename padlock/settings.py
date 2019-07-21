@@ -27,7 +27,7 @@ SECRET_KEY = '(t17uqq8s323^@mb(oy%i%da78hr)ht!53(031w^-2s#v7ltqy'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dbslusser.pythonanywhere.com']
 
 
 # Application definition
