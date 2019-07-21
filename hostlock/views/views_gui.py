@@ -90,6 +90,16 @@ class ListMyHosts(LoginRequiredMixin, ListView):
     """ list hosts that are owned by a group the current user is a member of """
     def get(self, request, *args, **kwargs):
         context = dict()
+        ##
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        print("TEST: ", dir(request.META.get))
+        print("TEST: ", ip)
+        ##
         template = "generic/generic_list.html"
         group_hosts = Host.objects.none()
         for group_name in request.user.groups.all():

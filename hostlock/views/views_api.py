@@ -8,6 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.core.exceptions import ValidationError
 from rest_framework.views import APIView
 
+from _common.helper_functions import get_requester_ip
+
 # import models
 from hostlock.models import (Host, Lock)
 
@@ -61,6 +63,7 @@ class GrantLockViewSet(viewsets.ViewSet):
         purpose = data.get('purpose')
         notes = data.get('notes')
         expiration = data.get('expiration')
+        source = get_requester_ip(request)
 
         if not hostname:
             return Response({'message': 'hostname is required to grant lock'.format(hostname)},
@@ -81,7 +84,8 @@ class GrantLockViewSet(viewsets.ViewSet):
                 expires_at = None
                 no_expire = False
             new_lock = Lock.objects.create(host=host, requester=request.user, purpose=purpose, notes=notes,
-                                           expires_at=expires_at, status="granted", no_expire=no_expire)
+                                           expires_at=expires_at, status="granted", no_expire=no_expire,
+                                           source=source)
             lock_serializer = LockSerializer(new_lock)
             return Response(lock_serializer.data)
         except ValidationError as err:
@@ -154,7 +158,7 @@ class CheckLockViewSet(APIView):
             if not lock:
                 return Response({'message': '{} is not currently locked'.format(hostname)}, status.HTTP_200_OK)
             else:
-                lock_serializer = LockSerializer(lock)
+                lock_serializer = LockSerializer(Lock.objects.get(id-lock.id))
                 return Response(lock_serializer.data)
         except Exception as err:
             return Response({'error': str(err)}, status.HTTP_500_INTERNAL_SERVER_ERROR)
