@@ -26,12 +26,27 @@
 
             <!-- actions -->
             <td>
+
                 <!-- lock history -->
                 <a href="#" class="" title="view audit log"
                    onClick="showInfo('{% url "hostlock:get_host_auditlog" %}', '{{ row.hostname }}', 'Audit Log: <small><i>{{ row.hostname }}</i></small>', 'xl');"
                    role="button" data-toggle="tooltip" data-placement="left">
                     <i class="fa fa-history fa-fw"></i>
                 </a>
+
+                <!-- view lock details -->
+                {% if row.is_locked %}
+                    {% for lock in row.lock_set.all %}
+                        {% if lock.status == 'granted' %}
+                    <a href="#" class="table-action-icon" title="view lock details"
+                       onClick="showInfo('{% url "hostlock:get_lock_details" %}', '{{ lock.id }}', 'Lock Details: <small><i>{{ row.hostname }}</i></small>', true);"
+                       role="button" data-toggle="tooltip" data-placement="left">
+                        <i class="fa fa-info-circle fa-fw"></i>
+                    </a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
             </td>
         </tr>
     {% endfor %}

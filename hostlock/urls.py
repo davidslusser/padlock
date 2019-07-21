@@ -40,6 +40,8 @@ urlpatterns = [
     path('list_locks/', gui.ListLocks.as_view(), name='list_locks'),
     path('list_hosts/', gui.ListHosts.as_view(), name='list_hosts'),
     path('list_my_locks', gui.ListMyLocks.as_view(), name='list_my_locks'),
+    path('list_my_hosts', gui.ListMyHosts.as_view(), name='list_my_hosts'),
+    path('list_expired_locks', gui.ListExpiredLocks.as_view(), name='list_expired_locks'),
 
     # action views
     path('release_host_lock', gui.ReleaseHostLock.as_view(), name='release_host_lock'),
@@ -47,5 +49,7 @@ urlpatterns = [
     # ajax views
     path('get_lock_auditlog', ajax.get_lock_auditlog, name='get_lock_auditlog'),
     path('get_host_auditlog', ajax.get_host_auditlog, name='get_host_auditlog'),
+    path('get_lock_details', ajax.get_lock_details, name='get_lock_details'),
+
 
 ]

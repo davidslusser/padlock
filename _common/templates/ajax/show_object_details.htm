@@ -1,0 +1,8 @@
+<div class="container m-5">
+    {% for key, value in object.items %}
+        <div class="row mb-3 ml-2 mr-2 border-bottom">
+            <div class="col-sm-2 font-weight-bold text-primary">{{ key }}</div>
+            <div class="col-sm-10 pr-5">{{ value }}</div>
+        </div>
+    {% endfor %}
+</div>
