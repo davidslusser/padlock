@@ -36,10 +36,20 @@ class HostlockBaseListView(FilterByQueryParamsMixin, ListView):
 
 
 class ListLocks(HostlockBaseListView):
-    """ list available all hostlock lock entries  """
+    """ list available hostlock lock entries """
     queryset = Lock.objects.all().select_related('host', 'host__owner', 'requester').order_by('-created_at')
     title = "Locks"
     page_description = ""
+    table = "table/table_locks.htm"
+
+
+class ListExpiredLocks(HostlockBaseListView):
+    """ list expired hostlock entries """
+    now = timezone.now()
+    queryset = Lock.objects.filter(status='granted', expires_at__lt=now
+                                   ).select_related('host', 'host__owner', 'requester').order_by('-created_at')
+    title = "Locks"
+    page_description = "exipred"
     table = "table/table_locks.htm"
 
 
@@ -73,6 +83,22 @@ class ListMyLocks(LoginRequiredMixin, View):
             .select_related('requester', 'host', 'host__owner')
         context['stale_locks'] = user_locks.filter(expires_at__lt=now) | group_locks.filter(expires_at__lt=now)
 
+        return render(request, template, context=context)
+
+
+class ListMyHosts(LoginRequiredMixin, ListView):
+    """ list hosts that are owned by a group the current user is a member of """
+    def get(self, request, *args, **kwargs):
+        context = dict()
+        template = "generic/generic_list.html"
+        group_hosts = Host.objects.none()
+        for group_name in request.user.groups.all():
+            group_hosts = group_hosts | Host.objects.filter(owner=group_name
+                                                            ).select_related('owner').prefetch_related('lock_set')
+        context['queryset'] = group_hosts
+        context['title'] = "Hosts"
+        context['sub_title'] = "I own"
+        context['table'] = "table/table_hosts.htm"
         return render(request, template, context=context)
 
 

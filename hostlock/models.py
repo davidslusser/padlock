@@ -39,6 +39,13 @@ class PadlockBaseModel(models.Model):
     class Meta:
         abstract = True
 
+    def get_meta(self):
+        return self._meta
+
+    def to_dict(self):
+        from django.forms.models import model_to_dict
+        return model_to_dict(self)
+
 
 class Host(PadlockBaseModel):
     """ table to track hosts """
@@ -49,6 +56,11 @@ class Host(PadlockBaseModel):
 
     class Meta:
         db_table = 'hostlock_hosts'
+
+    def get_lock(self):
+        """ return the current lock, if lock, otherwise return None """
+        if self.is_locked:
+            return self.lock_set.latest('id')
 
     def __str__(self):
         return self.hostname

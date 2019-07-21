@@ -195,6 +195,49 @@
             }
         }
 
+        function showObjectInfo(title, data, large, centered){
+            /*
+             Description:
+             Launch modal to display details on from a locally available object
+
+             Parameters:
+             data  - django model object
+             title - modal window title
+             large - use large modal
+             */
+            if (data === undefined){
+                return;
+            }
+            if (title === undefined){
+                var title = "Show Info";
+            }
+            if (large === undefined){
+                var large = false;
+            }
+            if (centered === undefined){
+                var centered = true;
+            }
+
+            if (centered == true) {
+                var body = '<br/><div class="text-center">' + data + '</div><br/>';
+            }
+            else {
+                var body = '<br/><div style="padding: 10px">' + data + '</div><br/>';
+            }
+            if (large == true) {
+                document.getElementById("id_modalResultsLargeHeader").innerHTML = "<b>" + title + "</b>";
+                document.getElementById("id_modalResultsLargeBody").innerHTML = body;
+                showModal('id_modalResultsLarge');
+            }
+            else {
+                document.getElementById("id_modalResultsHeader").innerHTML = "<b>" + title + "</b>";
+                document.getElementById("id_modalResultsBody").innerHTML = body;
+                showModal('id_modalResults');
+            }
+        }
+
+
+
         /* document ready */
         $(document).ready(function() {
         });

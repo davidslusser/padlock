@@ -135,7 +135,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-right">
-                                                    <a href="" class="text-danger"><i class="fa fa-info-circle fa-fw"></i></a>
+                                                    <a href="#" class="text-danger" title="view lock details"
+                                                       onClick="showInfo('{% url "hostlock:get_lock_details" %}', '{{ lock.id }}', 'Lock Details: <small><i>{{ lock.id }}</i></small>', true);"
+                                                       role="button" data-toggle="tooltip" data-placement="left">
+                                                        <i class="fa fa-info-circle fa-fw"></i>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </li>
@@ -200,5 +204,7 @@
         }
     });
 </script>
+
+{% include 'component/modals.htm' %}
 
 {% endblock content %}

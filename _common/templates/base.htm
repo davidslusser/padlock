@@ -21,7 +21,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.1/css/all.css" integrity="sha256-BbA16MRVnPLkcJWY/l5MsqhyOIQr7OpgUAkYkKVvYco=" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" integrity="sha256-HtCCUh9Hkh//8U1OwcbD8epVEUdBvuI8wj1KtqMhNkI=" crossorigin="anonymous" />
 
-
         <!-- custom styles & functions -->
         {% get_theme request as user_theme %}
         {% if user_theme %}
@@ -29,7 +28,7 @@
         {% else %}
             <link href="{% static 'theme_default.css' %}" rel="stylesheet">
         {% endif %}
-        <link href="{% static 'padlock.css' %}" rel="stylesheet">
+        <link href="{% static 'padlock_base.css' %}" rel="stylesheet">
 
         <!-- Local HEAD content -->
         {% block local_head %}{% endblock %}
@@ -70,7 +69,7 @@
     {% block mainnavbar %}
 {#        <nav class="navbar navbar-expand-md navbar-dark bg-primary" style="height: 45px">#}
         <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <a class="navbar-brand" href="{% url 'hostlock:home' %}"><b>PadLock </b></a>
+            <a class="navbar-brand mr-5" href="{% url 'hostlock:home' %}"><b>PadLock</b></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -83,12 +82,22 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             HostLock
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="{% url 'hostlock:hostlock_dashboard' %}">Dashboard</a>
-                            <a class="dropdown-item" href="{% url 'hostlock:list_locks' %}">Current Locks</a>
-                            <a class="dropdown-item" href="{% url 'hostlock:list_hosts' %}">Hosts</a>
-                            <a class="dropdown-item" href="">My Locks</a>
-                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'hostlock:hostlock_dashboard' %}">Dashboard</a></li>
+                            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Locks</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'hostlock:list_locks' %}?status=granted&page_description=currently granted">Current Locks</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'hostlock:list_expired_locks' %}">Expired Locks</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'hostlock:list_locks' %}?status=granted&requester__username={{ user }}&page_description=granted by me">My Locks</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Hosts</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'hostlock:list_hosts' %}?is_locked=True&page_description=locked">Locked Hosts</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'hostlock:list_my_hosts' %}">My Hosts</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </li>
 
                     <!-- apis -->
@@ -96,11 +105,11 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             APIs
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="/hostlock/api/v1/">Developer Tools</a>
                             <a class="dropdown-item" href="/swagger">Documentation <small>(Swagger)</small></a>
                             <a class="dropdown-item" href="{% url 'hostlock:hostlock_api_guide' %}">API Guide</a>
-                        </div>
+                        </ul>
                     </li>
 
                     <!-- self-service -->
@@ -108,13 +117,14 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Self-Service
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="#">Request Lock</a>
                             <a class="dropdown-item" href="#">Release Lock</a>
                             <a class="dropdown-item" href="#">Create Service Account</a>
                             <a class="dropdown-item" href="#">Refresh API Token</a>
-                        </div>
+                        </ul>
                     </li>
+
                 </ul>
 
                 <!-- login -->
@@ -125,7 +135,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <b class="fa fa-user fw mr-3"></b><span class="hidden-sm">{{ user }}</span>
                             </a>
-                            <div class="dropdown-menu ml-n3" aria-labelledby="navbarDropdown">
+                            <div class="dropdown-menu ml-md-n5 ml-lg-n5 ml-sm-0" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{% url 'logout' %}"><b class="fa fa-sign-out-alt fw mr-3"></b>Log out</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{% url 'detail_user' %}"><i class="fa fa-address-card fw mr-3"></i>Profile</a>
@@ -160,6 +170,7 @@
             </div>
         </nav>
         <br/>
+
     {% endblock mainnavbar %}
 
     {% block messages %}
@@ -169,9 +180,15 @@
         <div id='page-container' class="container-fluid"> <!-- start "page-container" -->
             <!-- main content loads here-->
             {% block content %} Default Content - Local page should overwrite this {% endblock content %}
-
-            {% block mainfooter %}
-            {% endblock mainfooter%}
         </div>  <!-- end "page-container" -->
+
+    {% block mainfooter %}
+        <footer class="footer">
+{#            <div class="container-fluid">#}
+{#                <span class="">Place sticky footer content here.</span>#}
+{#            </div>#}
+{#        </footer>#}
+    {% endblock mainfooter%}
+
     </body>
 </html>

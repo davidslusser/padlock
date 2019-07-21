@@ -13,6 +13,9 @@ from django.views.decorators.http import require_GET, require_POST
 from auditlog.models import LogEntry
 from hostlock.models import Lock
 
+# import serializers
+from hostlock.serializers import (HostSerializer, LockSerializer)
+
 
 @require_GET
 def get_host_auditlog(request):
@@ -80,3 +83,51 @@ def release_host_lock(request):
         return HttpResponse(json.dumps({'msg': 'Failed to release lock on {}'.format(lock.host.hostname)}), status=400)
     else:
         return HttpResponse(json.dumps({'msg': 'Lock on {} successfully released'.format(lock.host.hostname)}))
+
+
+# @require_GET
+# def get_lock_details(request):
+#     """
+#     Description:
+#         Get all fields for a given lock id.
+#     Args:
+#         request: AJAX request object.
+#     Returns:
+#         HttpResponse: JSON formatted response.
+#     """
+#     if (request.is_ajax()) and (request.method == 'GET'):
+#         if 'client_response' in request.GET:
+#             obj_id = request.GET['client_response']
+#             obj = Lock.objects.get(id=obj_id)
+#             serialized_obj = LockSerializer(obj)
+#             template = loader.get_template('ajax/show_object_details.htm')
+#             # return HttpResponse(json.dumps({"server_response": template.render({'object': obj})}),
+#             #                     content_type='application/javascript')
+#             return HttpResponse(json.dumps({"server_response": template.render({'object': serialized_obj.data})}),
+#                                 content_type='application/javascript')
+#         else:
+#             return HttpResponse("Invalid request inputs", status=400)
+#     else:
+#         return HttpResponse("Invalid request", status=400)
+
+@require_GET
+def get_lock_details(request):
+    """
+    Description:
+        Get all fields for a given lock id.
+    Args:
+        request: AJAX request object.
+    Returns:
+        HttpResponse: JSON formatted response.
+    """
+    if (request.is_ajax()) and (request.method == 'GET'):
+        if 'client_response' in request.GET:
+            obj_id = request.GET['client_response']
+            obj = Lock.objects.get(id=obj_id)
+            template = loader.get_template('ajax/detail_hostlock.htm')
+            return HttpResponse(json.dumps({"server_response": template.render({'object': obj})}),
+                                content_type='application/javascript')
+        else:
+            return HttpResponse("Invalid request inputs", status=400)
+    else:
+        return HttpResponse("Invalid request", status=400)
